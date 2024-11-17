@@ -70,7 +70,6 @@ classes  =  [
 ]
 #classes += module.classes
 
-
 def register():
 
     for cls in classes:
