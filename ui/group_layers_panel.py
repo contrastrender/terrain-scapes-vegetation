@@ -10,8 +10,8 @@ class TSV_UL_group_layers(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
         cur_node = (bpy.context.scene
-                    .sna_tsv_emitter.modifiers['vegetation']
-                    .node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(index) + '_layer'])
+                    .tsv_emitter.modifiers['vegetation']
+                    .node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(index) + '_layer'])
 
         solid_material = (cur_node.inputs['Solid Material'].default_value)
         
@@ -77,10 +77,10 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
             col_9DC6A.label(text='Viewport Display', icon_value=0)
             col_9DC6A.prop(cur_node.inputs[12], 'default_value', text='Max Instances', icon_value=0, emboss=True, expand=True)
             row_A0D0F = col_9DC6A.row(heading='', align=False)
-            row_A0D0F.prop(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index], 'viewport_display', text=bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].viewport_display, icon_value=0, emboss=True, expand=True)
+            row_A0D0F.prop(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index], 'viewport_display', text=bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].viewport_display, icon_value=0, emboss=True, expand=True)
 
-            if (bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].viewport_display == 'Low Poly'):
-                col_9DC6A.template_icon_view(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index], 'low_poly_objects', show_labels=False, scale=8.0, scale_popup=5.0)
+            if (bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].viewport_display == 'Low Poly'):
+                col_9DC6A.template_icon_view(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index], 'low_poly_objects', show_labels=False, scale=8.0, scale_popup=5.0)
             box_5DF65 = col_B146C.box()
             col_01A02 = box_5DF65.column(heading='', align=True)
             col_01A02.label(text='Scale', icon_value=0)

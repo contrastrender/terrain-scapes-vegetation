@@ -8,23 +8,23 @@ from .. helper.group_layer_helper import sna_append_low_poly_objects_8DF63
 from .. utils.property_utils import property_exists
 
 def sna_add_layer_31A03(label):
-    node_BFB5F = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='GeometryNodeGroup', )
+    node_BFB5F = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='GeometryNodeGroup', )
     node_BFB5F.node_tree = bpy.data.node_groups['.TSV_layer']
-    node_BFB5F.name = str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'
+    node_BFB5F.name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'
     material_72B75 = bpy.data.materials.new(name='.', )
     material_72B75.diffuse_color = (random_color(False, None, None)[0], random_color(False, None, None)[1], random_color(False, None, None)[2], 1.0)
-    bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs['Solid Material'].default_value = material_72B75
-    link_AC827 = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[0], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes['Group Input'].outputs[0], )
-    link_8CA9C = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes['Join Geometry'].inputs[0], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].outputs[0], )
-    link_21B4B = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[3], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + '_biome' + ''].outputs[1], )
-    link_70E24 = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[4], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + '_biome' + ''].outputs[2], )
-    link_3C430 = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[1], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[1], )
-    link_B31C1 = bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[2], output=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[2], )
-    bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers)) + '_layer'].inputs[8].default_value = random_integer(0.0, 10000.0, None)
-    item_F1484 = bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers.add()
+    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs['Solid Material'].default_value = material_72B75
+    link_AC827 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['Group Input'].outputs[0], )
+    link_8CA9C = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['Join Geometry'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].outputs[0], )
+    link_21B4B = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[3], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome' + ''].outputs[1], )
+    link_70E24 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[4], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome' + ''].outputs[2], )
+    link_3C430 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[1], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[1], )
+    link_B31C1 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[2], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[2], )
+    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[8].default_value = random_integer(0.0, 10000.0, None)
+    item_F1484 = bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers.add()
     item_F1484.label = label
-    bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index = int(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) - 1.0)
-    return str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(int(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) - 1.0)) + '_layer'
+    bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)
+    return str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)) + '_layer'
 
 
 class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
@@ -42,7 +42,7 @@ class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
     def execute(self, context):
         for i_C60DB in range(len(bpy.context.selected_objects)):
             node_0_6aca5 = sna_add_layer_31A03(bpy.context.selected_objects[i_C60DB].name)
-            bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_6aca5].inputs[7].default_value = bpy.context.selected_objects[i_C60DB]
+            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_6aca5].inputs[7].default_value = bpy.context.selected_objects[i_C60DB]
         sna_append_low_poly_objects_8DF63()
         return {"FINISHED"}
 
@@ -100,7 +100,7 @@ class TSV_OT_group_layer_remove(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        sna_remove_layer_3CD98(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index)
+        sna_remove_layer_3CD98(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -108,16 +108,16 @@ class TSV_OT_group_layer_remove(bpy.types.Operator):
 
 
 def sna_remove_layer_3CD98(Index):
-    if property_exists("bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index]", globals(), locals()):
-        if (None != bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value):
-            bpy.data.materials.remove(material=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value, )
-        bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes.remove(node=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(Index) + '_layer'], )
-        for i_6362E in range(int(int(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) - Index) - 1.0)):
-            bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(int(int(Index + i_6362E) + 1.0)) + '_layer'].name = str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(int(Index + i_6362E)) + '_layer'
-        if len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) > bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index:
-            bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers.remove(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index)
-        if (len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) == bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index):
-            bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index = int(len(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers) - 1.0)
+    if property_exists("bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index]", globals(), locals()):
+        if (None != bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value):
+            bpy.data.materials.remove(material=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value, )
+        bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.remove(node=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'], )
+        for i_6362E in range(int(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - Index) - 1.0)):
+            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(int(Index + i_6362E) + 1.0)) + '_layer'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(Index + i_6362E)) + '_layer'
+        if len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) > bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index:
+            bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers.remove(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index)
+        if (len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) == bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index):
+            bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)
 
 class TSV_OT_group_layer_add_from_asset_browser(bpy.types.Operator):
     bl_idname = "tsv.group_layer_add_from_asset_browser"
@@ -141,7 +141,7 @@ class TSV_OT_group_layer_add_from_asset_browser(bpy.types.Operator):
                 sna_append_objects_67667(bpy.context.asset.name, bpy.context.asset.full_library_path)
                 sna_append_low_poly_objects_8DF63()
                 node_0_d56bb = sna_add_layer_31A03(bpy.context.asset.name)
-                bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_d56bb].inputs[7].default_value = bpy.data.objects[bpy.context.asset.name]
+                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_d56bb].inputs[7].default_value = bpy.data.objects[bpy.context.asset.name]
         return {"FINISHED"}
 
     def invoke(self, context, event):

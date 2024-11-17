@@ -14,7 +14,7 @@ class TSV_PT_add_layer(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        return not (( not property_exists("bpy.context.asset.name", globals(), locals()) or  not property_exists("bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index]", globals(), locals()) or (None == bpy.context.asset) or ('OBJECT' != bpy.context.asset.id_type)))
+        return not (( not property_exists("bpy.context.asset.name", globals(), locals()) or  not property_exists("bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index]", globals(), locals()) or (None == bpy.context.asset) or ('OBJECT' != bpy.context.asset.id_type)))
 
     def draw_header(self, context):
         layout = self.layout

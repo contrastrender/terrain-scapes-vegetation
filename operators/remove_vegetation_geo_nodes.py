@@ -13,8 +13,8 @@ class TSV_OT_remove_vegetation_geo_nodes(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers.clear()
-        bpy.context.scene.sna_tsv_emitter.modifiers.remove(modifier=bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'], )
+        bpy.context.scene.tsv_emitter.tsv_groups.clear()
+        bpy.context.scene.tsv_emitter.modifiers.remove(modifier=bpy.context.scene.tsv_emitter.modifiers['vegetation'], )
         return {"FINISHED"}
 
     def draw(self, context):

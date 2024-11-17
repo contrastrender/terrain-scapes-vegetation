@@ -21,11 +21,11 @@ def load_preview_icon(path):
             return 0
     return _icons[path].icon_id
 
-def sna_tsv_masks_enum_items(self, context):
+def tsv_masks_enum_items(self, context):
     enum_items = biome_density_mask__add['sna_masks']
     return [make_enum_item(item[0], item[1], item[2], item[3], i) for i, item in enumerate(enum_items)]
 
-def sna_tsv_searchable_asset_libraries_enum_items(self, context):
+def tsv_searchable_asset_libraries_enum_items(self, context):
     enum_items = load_preset_group['sna_asset_libraries']
     return [make_enum_item(item[0], item[1], item[2], item[3], 2**i) for i, item in enumerate(enum_items)]
 
@@ -35,13 +35,13 @@ def sna_tsv_layer_low_poly_objects_enum_items(self, context):
 
 def sna_update_viewport_display_516D8(self, context):
     sna_updated_prop = self.viewport_display
-    bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index) + '_layer'].inputs[10].default_value = sna_updated_prop
-    if (('' != bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].low_poly_objects) and ('Low Poly' == sna_updated_prop)):
-        bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index) + '_layer'].inputs[11].default_value = bpy.data.objects[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].low_poly_objects]
+    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index) + '_layer'].inputs[10].default_value = sna_updated_prop
+    if (('' != bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].low_poly_objects) and ('Low Poly' == sna_updated_prop)):
+        bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index) + '_layer'].inputs[11].default_value = bpy.data.objects[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].low_poly_objects]
 
 def sna_update_low_poly_objects_4322F(self, context):
     sna_updated_prop = self.low_poly_objects
-    bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index) + ',' + str(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index) + '_layer'].inputs[11].default_value = bpy.data.objects[sna_updated_prop]
+    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index) + '_layer'].inputs[11].default_value = bpy.data.objects[sna_updated_prop]
 
 
 class TSV_GROUP_mask(bpy.types.PropertyGroup):
@@ -78,8 +78,8 @@ def register():
     bpy.types.Scene.tsv_emitter = bpy.props.PointerProperty(name='TSV_emitter', description='', type=bpy.types.Object)
     bpy.types.Object.tsv_groups = bpy.props.CollectionProperty(name='TSV_group_layers', description='', type=TSV_GROUP_group)
     bpy.types.Object.tsv_group_index = bpy.props.IntProperty(name='TSV_group_layer_index', description='', default=0, subtype='NONE')
-    bpy.types.Scene.tsv_masks = bpy.props.EnumProperty(name='TSV_masks', description='', items=sna_tsv_masks_enum_items)
-    bpy.types.Scene.tsv_searchable_asset_libraries = bpy.props.EnumProperty(name='TSV_searchable_asset_libraries', description='', items=sna_tsv_searchable_asset_libraries_enum_items, options={'ENUM_FLAG'})
+    bpy.types.Scene.tsv_masks = bpy.props.EnumProperty(name='TSV_masks', description='', items=tsv_masks_enum_items)
+    bpy.types.Scene.tsv_searchable_asset_libraries = bpy.props.EnumProperty(name='TSV_searchable_asset_libraries', description='', items=tsv_searchable_asset_libraries_enum_items, options={'ENUM_FLAG'})
     bpy.types.Scene.tsv_expand_preset_layers = bpy.props.BoolProperty(name='TSV_expand_preset_layers', description='', default=False)
 
     return 

@@ -13,7 +13,7 @@ class TSV_OT_expand_preset_group(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        bpy.context.scene.sna_tsv_expand_preset_layers =  not bpy.context.scene.sna_tsv_expand_preset_layers
+        bpy.context.scene.tsv_expand_preset_layers =  not bpy.context.scene.tsv_expand_preset_layers
         return {"FINISHED"}
 
     def invoke(self, context, event):

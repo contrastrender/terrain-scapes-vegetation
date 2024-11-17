@@ -20,7 +20,7 @@ class TSV_OT_save_preset_group(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        sna_save_preset_group_778E3(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[self.sna_index], self.sna_index)
+        sna_save_preset_group_778E3(bpy.context.scene.tsv_emitter.tsv_groups[self.sna_index], self.sna_index)
         return {"FINISHED"}
 
     def draw(self, context):
@@ -36,7 +36,7 @@ class TSV_OT_save_preset_group(bpy.types.Operator):
         col_9E3B3.alignment = 'Expand'.upper()
         col_9E3B3.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
         coll_id = display_collection_id('55549', locals())
-        col_9E3B3.template_list('SNA_UL_display_collection_list_55549', coll_id, bpy.context.scene.sna_tsv_emitter, 'sna_tsv_group_layers', self, 'sna_index', rows=0)
+        col_9E3B3.template_list('SNA_UL_display_collection_list_55549', coll_id, bpy.context.scene.tsv_emitter, 'tsv_groups', self, 'sna_index', rows=0)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self, width=300)
@@ -50,14 +50,14 @@ def sna_save_preset_group_778E3(group, group_index):
             item_FD65E = item_0A881.tsv_preset_layers.add()
             item_FD65E.label = group.layers[i_8EA76].label
             save_preset_group['sna_inputs'] = ''
-            for i_A39E2 in range(len(bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs)):
-                if property_exists("bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value", globals(), locals()):
-                    if ('OBJECT' == bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type):
-                        save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type + '|' + (bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value.name if property_exists("bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value.name", globals(), locals()) else 'None') + ('' if (float(len(bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
+            for i_A39E2 in range(len(bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs)):
+                if property_exists("bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value", globals(), locals()):
+                    if ('OBJECT' == bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type):
+                        save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type + '|' + (bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value.name if property_exists("bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value.name", globals(), locals()) else 'None') + ('' if (float(len(bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
                     else:
-                        save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type + '|' + str(bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value) + ('' if (float(len(bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
+                        save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].type + '|' + str(bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs[i_A39E2].default_value) + ('' if (float(len(bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
                 else:
-                    save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + 'None' + '|' + 'None' + ('' if (float(len(bpy.context.scene.sna_tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
+                    save_preset_group['sna_inputs'] = save_preset_group['sna_inputs'] + 'None' + '|' + 'None' + ('' if (float(len(bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(group_index) + ',' + str(i_8EA76) + '_layer'].inputs) - 1.0) == i_A39E2) else '||')
             item_FD65E.inputs = save_preset_group['sna_inputs']
 
 classes = [
