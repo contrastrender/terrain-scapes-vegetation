@@ -1,5 +1,6 @@
 import bpy
 
+from .. helper.get_prop_helper import get_ac_group_ac_layer_node, get_ac_group_layer_node
 from .. utils.collection_utils import index_in_col
 from .. utils.ui_utils import sna_display_inputs_from_67553
 from .. utils.property_utils import display_collection_id, property_exists
@@ -9,23 +10,15 @@ class TSV_UL_group_layers(bpy.types.UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
-        cur_node = (bpy.context.scene
-                    .tsv_emitter.modifiers['vegetation']
-                    .node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(index) + '_layer'])
-
-        solid_material = (cur_node.inputs['Solid Material'].default_value)
-        
-        hide_viewport = (cur_node.inputs[5])
-        
-        hide_render = (cur_node.inputs[6])
+        cur_node = get_ac_group_layer_node(index)
 
         row = layout.row(heading='', align=True)
         row_1 = row.row(heading='', align=True)
-        row_1.prop(solid_material, 'diffuse_color', text='', icon_value=0, emboss=True)
+        row_1.prop(cur_node.inputs['Solid Material'].default_value, 'diffuse_color', text='', icon_value=0, emboss=True)
         row.prop(item, 'label', text='', icon_value=0, emboss=False)
         row_2 = layout.row(heading='', align=True)
-        row_2.prop(hide_viewport, 'default_value', text='', icon_value=(253 if hide_viewport.default_value else 254), emboss=False)
-        row_2.prop(hide_render, 'default_value', text='', icon_value=(257 if hide_render.default_value else 258), emboss=False)
+        row_2.prop(cur_node.inputs[5], 'default_value', text='', icon_value=(253 if cur_node.inputs[5].default_value else 254), emboss=False)
+        row_2.prop(cur_node.inputs[6], 'default_value', text='', icon_value=(257 if cur_node.inputs[6].default_value else 258), emboss=False)
 
 
 class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
@@ -49,24 +42,16 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
         col_3D419 = self.layout.column(heading='', align=True)
         box_C1BA5 = col_3D419.box()
         row_69993 = box_C1BA5.row(heading='', align=True)
-        coll_id = display_collection_id('E36A2', locals())
-        row_69993.template_list('TSV_UL_group_layers', coll_id, group_layer, 'layers', group_layer, 'layer_index', rows=0)
+        row_69993.template_list('TSV_UL_group_layers', "", group_layer, 'layers', group_layer, 'layer_index', rows=0)
         col_76FCC = row_69993.column(heading='', align=False)
         col_69EE6 = col_76FCC.column(heading='', align=True)
         op = col_69EE6.operator('tsv.group_layer_add_from_selection', text='', icon_value=31, emboss=True, depress=False)
         op = col_69EE6.operator('tsv.group_layer_remove', text='', icon_value=32, emboss=True, depress=False)
         op = col_76FCC.operator('tsv.open_asset_browser', text='', icon_value=250, emboss=True, depress=False)
+        
+        cur_node = get_ac_group_ac_layer_node()
 
-        cur_node = (bpy.context.scene
-                    .tsv_emitter.modifiers['vegetation']
-                    .node_group.nodes[str(group_index) + ',' + str(group_layer.layer_index) + '_layer'])
-
-        if (
-            bpy.context.scene
-            .tsv_emitter
-            .tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index]
-            .layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index]
-            ) != None:
+        if cur_node != None:
 
             col_B146C = col_3D419.column(heading='', align=True)
             box_21F69 = col_B146C.box()

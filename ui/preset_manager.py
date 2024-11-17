@@ -1,6 +1,6 @@
 import bpy
 
-from .. helper.get_prop import get_preset_group_index, get_preset_groups
+from .. helper.get_prop_helper import get_ac_preset_group, get_preset_group_index, get_preset_groups
 from .. utils.property_utils import *
 from .. utils.const_utils import ROOT_PACKAGE_NAME
 
@@ -24,8 +24,7 @@ class TSV_UL_preset_groups(bpy.types.UIList):
 
 def tsv_preset_manager(layout, ):
 
-    preset_groups = get_preset_groups()
-    preset_group_index = get_preset_group_index()
+    ac_preset_group = get_ac_preset_group()
 
     column = layout.column(heading='', align=False)
     column.label(text='Preset Groups', icon_value=0)
@@ -33,8 +32,7 @@ def tsv_preset_manager(layout, ):
     column.operator('tsv.import_preset_group', text='Import Preset', icon_value=706, emboss=True, depress=False)
 
     row = column.row(heading='', align=True)
-    coll_id = display_collection_id('AFE29', locals())
-    row.template_list('TSV_UL_preset_groups', coll_id, bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences, 'tsv_preset_groups', bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences, 'tsv_preset_group_index', rows=0)
+    row.template_list('TSV_UL_preset_groups', "", bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences, 'tsv_preset_groups', bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences, 'tsv_preset_group_index', rows=0)
     col_87264 = row.column(heading='', align=False)
     col_FB45C = col_87264.column(heading='', align=True)
     op = col_FB45C.operator('tsv.save_preset_group', text='', icon_value=31, emboss=True, depress=False)
@@ -47,11 +45,11 @@ def tsv_preset_manager(layout, ):
     if bpy.context.scene.tsv_expand_preset_layers:
         col_7ABF7 = column.column(heading='', align=False)
         col_7ABF7.label(text='Preset Group Layers', icon_value=0)
-        if property_exists("bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups[bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_group_index]", globals(), locals()):
-            if (len(bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups[bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups_index].tsv_preset_layers) != 0):
-                for i_702AC in range(len(bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups[bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups_index].tsv_preset_layers)):
+        if ac_preset_group != None:
+            if (len(ac_preset_group.tsv_preset_layers) != 0):
+                for i in range(len(ac_preset_group.tsv_preset_layers)):
                     box_2E602 = col_7ABF7.box()
-                    box_2E602.label(text=bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups[bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups_index].tsv_preset_layers[i_702AC].label, icon_value=0)
+                    box_2E602.label(text=ac_preset_group.tsv_preset_layers[i].label, icon_value=0)
             else:
                 col_7ABF7.label(text="Preset doesn't contain any layers", icon_value=0)
         else:

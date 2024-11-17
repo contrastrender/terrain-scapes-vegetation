@@ -13,30 +13,62 @@ class TSV_OT_move_group_layer_up(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        if (0 < bpy.context.scene.tsv_emitter.tsv_group_index):
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome'].name = '-2_biome'
-            for i_B84D5 in range(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(i_B84D5 - 1.0)) + '_density'].name = '-2' + ',' + str(int(i_B84D5 - 1.0)) + '_density'
-            for i_F7112 in range(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(i_F7112) + '_layer'].name = '-2' + ',' + str(i_F7112) + '_layer'
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + '_biome'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome'
-            for i_D78FD in range(int(len(bpy.context.scene.tsv_emitter.tsv_groups[int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + ',' + str(int(i_D78FD - 1.0)) + '_density'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(i_D78FD - 1.0)) + '_density'
-            for i_13A14 in range(len(bpy.context.scene.tsv_emitter.tsv_groups[int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + ',' + str(i_13A14) + '_layer'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(i_13A14) + '_layer'
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + '_biome'].name = str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + '_biome'
-            for i_7827F in range(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + ',' + str(int(i_7827F - 1.0)) + '_density'].name = str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + ',' + str(int(i_7827F - 1.0)) + '_density'
-            for i_B8E77 in range(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + ',' + str(i_B8E77) + '_layer'].name = str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + ',' + str(i_B8E77) + '_layer'
-            if (bpy.context.scene.tsv_emitter.tsv_group_index > 2):
-                pass
-            link_C37F3 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 2.0)) + '_biome'].outputs[0], )
-            link_81D79 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)) + '_biome'].outputs[0], )
-            link_DF050 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.scene.tsv_emitter.tsv_group_index + 1.0)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome'].outputs[0], )
-            bpy.context.scene.tsv_emitter.tsv_groups.move(bpy.context.scene.tsv_emitter.tsv_group_index, int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0))
-            item_3CFFF = bpy.context.scene.tsv_emitter.tsv_groups[int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)]
-            bpy.context.scene.tsv_emitter.tsv_group_index = int(bpy.context.scene.tsv_emitter.tsv_group_index - 1.0)
+        """
+        Executes the reordering of TSV groups by moving the current group up in the hierarchy.
+        This involves renaming nodes and relinking connections for consistency.
+        """
+        # References to frequently used data
+        scene = bpy.context.scene
+        tsv_emitter = scene.tsv_emitter
+        vegetation_node_group = tsv_emitter.modifiers['vegetation'].node_group
+        group_index = tsv_emitter.tsv_group_index
+
+        # Ensure the group index is valid for reordering
+        if group_index > 0:
+            current_group = tsv_emitter.tsv_groups[group_index]
+            previous_group_index = group_index - 1
+
+            # Temporary renaming of current group's biome and density nodes
+            vegetation_node_group.nodes[f"{group_index}_biome"].name = "-2_biome"
+            for i in range(len(current_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"{group_index},{i - 1}_density"].name = f"-2,{i - 1}_density"
+            for i in range(len(current_group.layers)):
+                vegetation_node_group.nodes[f"{group_index},{i}_layer"].name = f"-2,{i}_layer"
+
+            # Rename the previous group's nodes to occupy the current group's index
+            vegetation_node_group.nodes[f"{previous_group_index}_biome"].name = f"{group_index}_biome"
+            previous_group = tsv_emitter.tsv_groups[previous_group_index]
+            for i in range(len(previous_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"{previous_group_index},{i - 1}_density"].name = f"{group_index},{i - 1}_density"
+            for i in range(len(previous_group.layers)):
+                vegetation_node_group.nodes[f"{previous_group_index},{i}_layer"].name = f"{group_index},{i}_layer"
+
+            # Rename the temporary "-2" nodes back to the previous group's index
+            vegetation_node_group.nodes["-2_biome"].name = f"{previous_group_index}_biome"
+            for i in range(len(current_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"-2,{i - 1}_density"].name = f"{previous_group_index},{i - 1}_density"
+            for i in range(len(current_group.layers)):
+                vegetation_node_group.nodes[f"-2,{i}_layer"].name = f"{previous_group_index},{i}_layer"
+
+            # Re-link biome nodes to maintain the connection structure
+            if group_index >= 1:
+                vegetation_node_group.links.new(
+                    input=vegetation_node_group.nodes[f"{previous_group_index}_biome"].inputs[0],
+                    output=vegetation_node_group.nodes[f"{previous_group_index - 1}_biome"].outputs[0],
+                )
+            vegetation_node_group.links.new(
+                input=vegetation_node_group.nodes[f"{group_index}_biome"].inputs[0],
+                output=vegetation_node_group.nodes[f"{previous_group_index}_biome"].outputs[0],
+            )
+            vegetation_node_group.links.new(
+                input=vegetation_node_group.nodes[f"{group_index + 1}_biome"].inputs[0],
+                output=vegetation_node_group.nodes[f"{group_index}_biome"].outputs[0],
+            )
+
+            # Move the current group in the TSV group list and update the index
+            tsv_emitter.tsv_groups.move(group_index, previous_group_index)
+            tsv_emitter.tsv_group_index = previous_group_index
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -55,28 +87,83 @@ class TSV_OT_move_group_layer_down(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        if (int(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups) - 1.0) > bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index):
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + '_biome'].name = '-2_Biome'
-            for i_9DDDC in range(int(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + ',' + str(int(i_9DDDC - 1.0)) + '_density'].name = '-2' + ',' + str(int(i_9DDDC - 1.0)) + '_density'
-            for i_152D6 in range(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + ',' + str(i_152D6) + '_layer'].name = '-2' + ',' + str(i_152D6) + '_layer'
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + '_biome'].name = str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + '_biome'
-            for i_68B64 in range(int(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + ',' + str(int(i_68B64 - 1.0)) + '_density'].name = str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + ',' + str(int(i_68B64 - 1.0)) + '_density'
-            for i_BC6CA in range(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + ',' + str(i_BC6CA) + '_layer'].name = str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + ',' + str(i_BC6CA) + '_layer'
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + '_biome'].name = str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + '_biome'
-            for i_99B88 in range(int(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index].density_masks) + 2.0)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + ',' + str(int(i_99B88 - 1.0)) + '_density'].name = str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + ',' + str(int(i_99B88 - 1.0)) + '_density'
-            for i_84A15 in range(len(bpy.context.view_layer.objects.active.tsv_groups.tsv_groups[bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index].layers)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['-2' + ',' + str(i_84A15) + '_layer'].name = str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + ',' + str(i_84A15) + '_layer'
-            link_42708 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index - 1.0)) + '_biome'].outputs[0], )
-            link_473C6 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index) + '_biome'].outputs[0], )
-            link_96687 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 2.0)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(bpy.context.view_layer.objects.active.tsv_groups.tsv_group_index + 1.0)) + '_biome'].outputs[0], )
-            bpy.context.scene.tsv_emitter.tsv_groups.move(bpy.context.scene.tsv_emitter.tsv_group_index, int(bpy.context.scene.tsv_emitter.tsv_group_index + 1.0))
-            item_8FAB8 = bpy.context.scene.tsv_emitter.tsv_groups[int(bpy.context.scene.tsv_emitter.tsv_group_index + 1.0)]
-            bpy.context.scene.tsv_emitter.tsv_group_index = int(bpy.context.scene.tsv_emitter.tsv_group_index + 1.0)
+        """
+        Moves the current TSV group up in the index, renaming associated biome, density, and layer nodes.
+        Updates connections between biome nodes and moves the group in the internal list.
+        """
+
+        # Get references to active scene and relevant attributes
+        scene = bpy.context.scene
+        tsv_emitter = scene.tsv_emitter
+        vegetation_node_group = tsv_emitter.modifiers['vegetation'].node_group
+        active_object = bpy.context.view_layer.objects.active
+
+        # Check if the active object has tsv_groups
+        if not hasattr(active_object, 'tsv_groups') or len(active_object.tsv_groups) == 0:
+            self.report({'ERROR'}, "Active object does not have tsv_groups.")
+            return {'CANCELLED'}
+
+        # Check if tsv_group_index exists within the tsv_emitter or other context
+        if not hasattr(tsv_emitter, 'tsv_group_index'):
+            self.report({'ERROR'}, "tsv_group_index is not defined in tsv_emitter.")
+            return {'CANCELLED'}
+
+        # Retrieve the group index from tsv_emitter
+        group_index = tsv_emitter.tsv_group_index
+
+        # Ensure the index is valid
+        if group_index < 0 or group_index >= len(active_object.tsv_groups):
+            self.report({'ERROR'}, "Invalid TSV group index.")
+            return {'CANCELLED'}
+
+        # Check if the group is not the last one in the list
+        if group_index < len(active_object.tsv_groups) - 1:
+            current_group = active_object.tsv_groups[group_index]
+            next_group_index = group_index + 1
+
+            # Rename current group biome, density, and layer nodes to temporary names
+            vegetation_node_group.nodes[f"{group_index}_biome"].name = "-2_Biome"
+            for i in range(len(current_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"{group_index},{i - 1}_density"].name = f"-2,{i - 1}_density"
+            for i in range(len(current_group.layers)):
+                vegetation_node_group.nodes[f"{group_index},{i}_layer"].name = f"-2,{i}_layer"
+
+            # Rename next group biome, density, and layer nodes to the current group's index
+            next_group = active_object.tsv_groups[next_group_index]
+            vegetation_node_group.nodes[f"{next_group_index}_biome"].name = f"{group_index}_biome"
+            for i in range(len(next_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"{next_group_index},{i - 1}_density"].name = f"{group_index},{i - 1}_density"
+            for i in range(len(next_group.layers)):
+                vegetation_node_group.nodes[f"{next_group_index},{i}_layer"].name = f"{group_index},{i}_layer"
+
+            # Rename the temporary nodes back to the next group's index
+            vegetation_node_group.nodes["-2_Biome"].name = f"{next_group_index}_biome"
+            for i in range(len(current_group.density_masks) + 2):
+                vegetation_node_group.nodes[f"-2,{i - 1}_density"].name = f"{next_group_index},{i - 1}_density"
+            for i in range(len(current_group.layers)):
+                vegetation_node_group.nodes[f"-2,{i}_layer"].name = f"{next_group_index},{i}_layer"
+
+            # Create links between biome nodes to preserve connections
+            if group_index >= 0:
+                vegetation_node_group.links.new(
+                    input=vegetation_node_group.nodes[f"{group_index}_biome"].inputs[0],
+                    output=vegetation_node_group.nodes[f"{group_index - 1}_biome"].outputs[0]
+                )
+
+            vegetation_node_group.links.new(
+                input=vegetation_node_group.nodes[f"{next_group_index}_biome"].inputs[0],
+                output=vegetation_node_group.nodes[f"{group_index}_biome"].outputs[0]
+            )
+
+            vegetation_node_group.links.new(
+                input=vegetation_node_group.nodes[f"{next_group_index + 1}_biome"].inputs[0],
+                output=vegetation_node_group.nodes[f"{next_group_index}_biome"].outputs[0]
+            )
+
+            # Move the current group to the next position in the list
+            tsv_emitter.tsv_groups.move(group_index, next_group_index)
+            tsv_emitter.tsv_group_index = next_group_index
+
         return {"FINISHED"}
 
     def invoke(self, context, event):

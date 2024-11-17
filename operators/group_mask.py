@@ -27,19 +27,52 @@ class TSV_OT_group_mask_add(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        mask_name = bpy.context.scene.tsv_masks
-        bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks)) + '_density'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) + 1.0)) + '_density'
-        node_FB024 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='GeometryNodeGroup', )
-        node_FB024.node_tree = bpy.data.node_groups['.TSV_mask_' + mask_name]
-        node_FB024.name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks)) + '_density'
-        link_C4100 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks)) + '_density'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) - 1.0)) + '_density'].outputs[0], )
-        link_D31DA = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) + 1.0)) + '_density'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks)) + '_density'].outputs[0], )
-        item_43506 = bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks.add()
-        item_43506.label = mask_name
-        item_43506.texture = '.TSV_mask_' + mask_name
-        bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) - 1.0)
+        """
+        Add a new density mask to the vegetation system and update the node group structure.
+        """
+        # Get references to frequently used data
+        scene = bpy.context.scene
+        tsv_emitter = scene.tsv_emitter
+        group_index = tsv_emitter.tsv_group_index
+        group = tsv_emitter.tsv_groups[group_index]
+        modifiers = tsv_emitter.modifiers
+        vegetation_node_group = modifiers['vegetation'].node_group
+        mask_name = scene.tsv_masks
 
+        # Determine current and new density node identifiers
+        current_density_index = len(group.density_masks)
+        current_density_name = f"{group_index},{current_density_index}_density"
+        new_density_name = f"{group_index},{current_density_index + 1}_density"
+
+        # Rename the current density node
+        vegetation_node_group.nodes[current_density_name].name = new_density_name
+
+        # Create a new density node
+        new_node = vegetation_node_group.nodes.new(type='GeometryNodeGroup')
+        new_node.node_tree = bpy.data.node_groups[f".TSV_mask_{mask_name}"]
+        new_node.name = current_density_name  # Assign the appropriate name for the new node
+
+        # Create links between nodes
+        previous_node = vegetation_node_group.nodes[f"{group_index},{current_density_index - 1}_density"]
+        vegetation_node_group.links.new(
+            input=vegetation_node_group.nodes[current_density_name].inputs[0],
+            output=previous_node.outputs[0]
+        )
+        vegetation_node_group.links.new(
+            input=vegetation_node_group.nodes[new_density_name].inputs[0],
+            output=vegetation_node_group.nodes[current_density_name].outputs[0]
+        )
+
+        # Add a new density mask to the group
+        new_mask = group.density_masks.add()
+        new_mask.label = mask_name
+        new_mask.texture = f".TSV_mask_{mask_name}"
+    
+        # Update the active density mask index
+        group.density_mask_index = current_density_index
+        
         return {"FINISHED"}
+
 
     def draw(self, context):
         layout = self.layout
@@ -56,11 +89,32 @@ class TSV_OT_group_mask_add(bpy.types.Operator):
         col_FC1B4.template_icon_view(bpy.context.scene, 'tsv_masks', show_labels=True, scale=8.0, scale_popup=5.0)
 
     def invoke(self, context, event):
+        """
+        Populate biome density masks and display a dialog for user interaction.
+        """
+        # Initialize the masks list
         biome_density_mask__add['sna_masks'] = []
-        for i_895AA in range(len([os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f) for f in os.listdir(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks')) if os.path.isfile(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f))])):
-            biome_density_mask__add['sna_masks'].append([os.path.basename([os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f) for f in os.listdir(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks')) if os.path.isfile(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f))][i_895AA]).replace('.png', ''), os.path.basename([os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f) for f in os.listdir(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks')) if os.path.isfile(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f))][i_895AA]).replace('.png', ''), '', load_preview_icon([os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f) for f in os.listdir(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks')) if os.path.isfile(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'masks'), f))][i_895AA])])
 
+        # Define the directory for mask assets
+        base_dir = os.path.dirname(__file__)
+        masks_dir = os.path.join(base_dir, 'assets', 'terrain_scapes_vegetation', 'masks')
+
+        # Get a list of valid mask files
+        mask_files = [
+            os.path.join(masks_dir, f)
+            for f in os.listdir(masks_dir)
+            if os.path.isfile(os.path.join(masks_dir, f))
+        ]
+
+        # Populate sna_masks with relevant data
+        for mask_file in mask_files:
+            mask_name = os.path.basename(mask_file).replace('.png', '')
+            preview_icon = load_preview_icon(mask_file)
+            biome_density_mask__add['sna_masks'].append([mask_name, mask_name, '', preview_icon])
+
+        # Invoke the properties dialog
         return context.window_manager.invoke_props_dialog(self, width=300)
+
     
 class TSV_OT_group_mask_remove(bpy.types.Operator):
     bl_idname = "tsv.group_mask_remove"
@@ -75,17 +129,55 @@ class TSV_OT_group_mask_remove(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        if property_exists("bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index]", globals(), locals()):
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.remove(node=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_density'], )
-            for i_A469F in range(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) - Index)):
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(int(i_A469F + Index) + 1.0)) + '_density'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(i_A469F + Index)) + '_density'
-            link_53AC1 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_density'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(Index - 1.0)) + '_density'].outputs[0], )
-            if len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) > bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index:
-                bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks.remove(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index)
-            if (len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) == bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index):
-                bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_mask_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].density_masks) - 1.0)
+        """
+        Remove a density mask and update the associated node group structure.
+        """
+        # Get references to frequently used data
+        scene = bpy.context.scene
+        tsv_emitter = scene.tsv_emitter
+        group_index = tsv_emitter.tsv_group_index
+        group = tsv_emitter.tsv_groups[group_index]
+        modifiers = tsv_emitter.modifiers
+        vegetation_node_group = modifiers['vegetation'].node_group
+        density_masks = group.density_masks
+        mask_index = group.density_mask_index
+
+        # Ensure the property exists before proceeding
+        if property_exists(
+            f"bpy.context.scene.tsv_emitter.tsv_groups[{group_index}].density_masks[{mask_index}]",
+            globals(), locals()
+        ):
+            # Remove the specified density node
+            node_to_remove = vegetation_node_group.nodes[f"{group_index},{mask_index}_density"]
+            vegetation_node_group.nodes.remove(node_to_remove)
+
+            # Update subsequent node names
+            for i in range(len(density_masks) - mask_index):
+                current_index = mask_index + i + 1
+                new_index = mask_index + i
+                current_node_name = f"{group_index},{current_index}_density"
+                new_node_name = f"{group_index},{new_index}_density"
+                vegetation_node_group.nodes[current_node_name].name = new_node_name
+
+            # Re-link nodes around the removed node
+            if mask_index > 0:
+                previous_node_name = f"{group_index},{mask_index - 1}_density"
+                current_node_name = f"{group_index},{mask_index}_density"
+                vegetation_node_group.links.new(
+                    input=vegetation_node_group.nodes[current_node_name].inputs[0],
+                    output=vegetation_node_group.nodes[previous_node_name].outputs[0]
+                )
+
+            # Remove the density mask from the group
+            if mask_index < len(density_masks):
+                density_masks.remove(mask_index)
+
+            # Update the active mask index if necessary
+            if mask_index == len(density_masks):
+                group.density_mask_index = len(density_masks) - 1
 
         return {"FINISHED"}
+
 
     def invoke(self, context, event):
         return self.execute(context)

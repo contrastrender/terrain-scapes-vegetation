@@ -8,23 +8,51 @@ from .. helper.group_layer_helper import sna_append_low_poly_objects_8DF63
 from .. utils.property_utils import property_exists
 
 def sna_add_layer_31A03(label):
-    node_BFB5F = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='GeometryNodeGroup', )
+    # Get references for better readability
+    scene = bpy.context.scene
+    tsv_emitter = scene.tsv_emitter
+    vegetation_node_group = tsv_emitter.modifiers['vegetation'].node_group
+    group_index = tsv_emitter.tsv_group_index
+    group = tsv_emitter.tsv_groups[group_index]
+
+    # Create layer name based on the group index and number of layers
+    layer_name = f"{group_index},{len(group.layers)}_layer"
+    
+    # Create a new Geometry Node
+    node_BFB5F = vegetation_node_group.nodes.new(type='GeometryNodeGroup')
     node_BFB5F.node_tree = bpy.data.node_groups['.TSV_layer']
-    node_BFB5F.name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'
-    material_72B75 = bpy.data.materials.new(name='.', )
-    material_72B75.diffuse_color = (random_color(False, None, None)[0], random_color(False, None, None)[1], random_color(False, None, None)[2], 1.0)
-    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs['Solid Material'].default_value = material_72B75
-    link_AC827 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['Group Input'].outputs[0], )
-    link_8CA9C = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['Join Geometry'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].outputs[0], )
-    link_21B4B = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[3], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome' + ''].outputs[1], )
-    link_70E24 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[4], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + '_biome' + ''].outputs[2], )
-    link_3C430 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[1], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[1], )
-    link_B31C1 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[2], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[2], )
-    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers)) + '_layer'].inputs[8].default_value = random_integer(0.0, 10000.0, None)
-    item_F1484 = bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers.add()
-    item_F1484.label = label
-    bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)
-    return str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)) + '_layer'
+    node_BFB5F.name = layer_name
+    
+    # Create a new material with a random color
+    material_72B75 = bpy.data.materials.new(name='Layer_Material')
+    material_72B75.diffuse_color = (*random_color(False, None, None)[0:3], 1.0)  # Fix here, add arguments as in original code
+    node_BFB5F.inputs['Solid Material'].default_value = material_72B75
+
+    # Define node names for cleaner linking
+    input_node = vegetation_node_group.nodes[layer_name]
+    group_input_node = vegetation_node_group.nodes['Group Input']
+    join_geometry_node = vegetation_node_group.nodes['Join Geometry']
+    biome_node = vegetation_node_group.nodes[f"{group_index}_biome"]
+    system_node = vegetation_node_group.nodes['system']
+    
+    # Link nodes
+    vegetation_node_group.links.new(input=input_node.inputs[0], output=group_input_node.outputs[0])
+    vegetation_node_group.links.new(input=join_geometry_node.inputs[0], output=input_node.outputs[0])
+    vegetation_node_group.links.new(input=input_node.inputs[3], output=biome_node.outputs[1])
+    vegetation_node_group.links.new(input=input_node.inputs[4], output=biome_node.outputs[2])
+    vegetation_node_group.links.new(input=input_node.inputs[1], output=system_node.outputs[1])
+    vegetation_node_group.links.new(input=input_node.inputs[2], output=system_node.outputs[2])
+    
+    # Set a random integer input value
+    input_node.inputs[8].default_value = random_integer(0.0, 10000.0, None)
+    
+    # Add the layer to the TSV group and update the layer index
+    new_layer = group.layers.add()
+    new_layer.label = label
+    group.layer_index = len(group.layers) - 1  # Set to the last layer index
+    
+    return layer_name
+
 
 
 class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
@@ -49,39 +77,12 @@ class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         col_0E2D5 = layout.column(heading='', align=True)
-        col_0E2D5.alert = False
-        col_0E2D5.enabled = True
-        col_0E2D5.active = True
-        col_0E2D5.use_property_split = True
-        col_0E2D5.use_property_decorate = False
-        col_0E2D5.scale_x = 1.0
-        col_0E2D5.scale_y = 1.0
-        col_0E2D5.alignment = 'Expand'.upper()
-        col_0E2D5.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
         if (0 == len(bpy.context.selected_objects)):
             box_EFDD4 = col_0E2D5.box()
-            box_EFDD4.alert = False
-            box_EFDD4.enabled = True
-            box_EFDD4.active = False
-            box_EFDD4.use_property_split = False
-            box_EFDD4.use_property_decorate = False
-            box_EFDD4.alignment = 'Expand'.upper()
-            box_EFDD4.scale_x = 1.0
-            box_EFDD4.scale_y = 1.0
-            if not True: box_EFDD4.operator_context = "EXEC_DEFAULT"
             box_EFDD4.label(text='No objects selected', icon_value=0)
         else:
             for i_C55A4 in range(len(bpy.context.selected_objects)):
                 box_5BA78 = col_0E2D5.box()
-                box_5BA78.alert = False
-                box_5BA78.enabled = True
-                box_5BA78.active = True
-                box_5BA78.use_property_split = False
-                box_5BA78.use_property_decorate = False
-                box_5BA78.alignment = 'Expand'.upper()
-                box_5BA78.scale_x = 1.0
-                box_5BA78.scale_y = 1.0
-                if not True: box_5BA78.operator_context = "EXEC_DEFAULT"
                 box_5BA78.label(text=bpy.context.selected_objects[i_C55A4].name, icon_value=0)
 
     def invoke(self, context, event):
@@ -108,16 +109,46 @@ class TSV_OT_group_layer_remove(bpy.types.Operator):
 
 
 def sna_remove_layer_3CD98(Index):
-    if property_exists("bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index]", globals(), locals()):
-        if (None != bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value):
-            bpy.data.materials.remove(material=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'].inputs['Solid Material'].default_value, )
-        bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.remove(node=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(Index) + '_layer'], )
-        for i_6362E in range(int(int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - Index) - 1.0)):
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(int(Index + i_6362E) + 1.0)) + '_layer'].name = str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(int(Index + i_6362E)) + '_layer'
-        if len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) > bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index:
-            bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers.remove(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index)
-        if (len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) == bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index):
-            bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers) - 1.0)
+    # Get necessary references
+    scene = bpy.context.scene
+    tsv_emitter = scene.tsv_emitter
+    node_group = tsv_emitter.modifiers['vegetation'].node_group
+    group_index = tsv_emitter.tsv_group_index
+    group = tsv_emitter.tsv_groups[group_index]
+    
+    # Generate the node name for the target layer
+    layer_name = f"{group_index},{Index}_layer"
+    
+    # Check if the property exists before continuing
+    if property_exists(f"bpy.context.scene.tsv_emitter.tsv_groups[{group_index}].layers[{group.layer_index}]", globals(), locals()):
+        # Retrieve the node based on the generated name
+        node = node_group.nodes.get(layer_name)
+        
+        if node:
+            # Remove the material if it exists (only if the 'Solid Material' input is not None)
+            solid_material = node.inputs.get('Solid Material')
+            if solid_material and solid_material.default_value:
+                bpy.data.materials.remove(solid_material.default_value)
+            
+            # Remove the node from the node group
+            node_group.nodes.remove(node)
+            
+            # Shift the node names for the remaining layers
+            for i in range(Index + 1, len(group.layers)):
+                new_layer_name = f"{group_index},{i-1}_layer"
+                node_to_rename = node_group.nodes.get(f"{group_index},{i}_layer")
+                if node_to_rename:
+                    node_to_rename.name = new_layer_name
+            
+            # Remove the layer from the group
+            if len(group.layers) > group.layer_index:
+                group.layers.remove(group.layer_index)
+            
+            # Update the layer_index if needed
+            if len(group.layers) == group.layer_index:
+                group.layer_index = len(group.layers) - 1
+
+
 
 class TSV_OT_group_layer_add_from_asset_browser(bpy.types.Operator):
     bl_idname = "tsv.group_layer_add_from_asset_browser"

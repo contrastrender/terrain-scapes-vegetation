@@ -1,6 +1,8 @@
 import bpy
 import os
 
+from .. utils.const_utils import ROOT_DIR
+
 _item_map = dict()
 
 biome_density_mask__add = {'sna_masks': [], }
@@ -30,14 +32,53 @@ def tsv_searchable_asset_libraries_enum_items(self, context):
     return [make_enum_item(item[0], item[1], item[2], item[3], 2**i) for i, item in enumerate(enum_items)]
 
 def sna_tsv_layer_low_poly_objects_enum_items(self, context):
-    enum_items = [['TSV_low_poly_object_1', 'TSV_low_poly_object_1', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_1.png'))], ['TSV_low_poly_object_2', 'TSV_low_poly_object_2', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_2.png'))], ['TSV_low_poly_object_3', 'TSV_low_poly_object_3', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_3.png'))], ['TSV_low_poly_object_4', 'TSV_low_poly_object_4', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_4.png'))], ['TSV_low_poly_object_5', 'TSV_low_poly_object_5', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_5.png'))], ['TSV_low_poly_object_6', 'TSV_low_poly_object_6', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_6.png'))], ['TSV_low_poly_object_7', 'TSV_low_poly_object_7', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_7.png'))], ['TSV_low_poly_object_8', 'TSV_low_poly_object_8', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_8.png'))], ['TSV_low_poly_object_9', 'TSV_low_poly_object_9', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_9.png'))], ['TSV_low_poly_object_10', 'TSV_low_poly_object_10', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_10.png'))], ['TSV_low_poly_object_11', 'TSV_low_poly_object_11', '', load_preview_icon(os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'low_poly_objects'),'TSV_low_poly_object_11.png'))]]
+    # Define the directory paths
+    base_dir = os.path.dirname(__file__)
+    assets_dir = os.path.join(ROOT_DIR, 'assets', 'low_poly_objects')
+    
+    # Define low poly objects with their corresponding icons
+    object_names = [f'TSV_low_poly_object_{i}' for i in range(1, 12)]
+    enum_items = [
+        [
+            obj_name,
+            obj_name,
+            '',
+            load_preview_icon(os.path.join(assets_dir, f'{obj_name}.png'))
+        ]
+        for obj_name in object_names
+    ]
+    
+    # Generate enum items
     return [make_enum_item(item[0], item[1], item[2], item[3], i) for i, item in enumerate(enum_items)]
 
+
 def sna_update_viewport_display_516D8(self, context):
+    """
+    Update the viewport display settings for the vegetation system based on the
+    selected layer and group configuration.
+    """
+    # Get the updated property value
     sna_updated_prop = self.viewport_display
-    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index) + '_layer'].inputs[10].default_value = sna_updated_prop
-    if (('' != bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].low_poly_objects) and ('Low Poly' == sna_updated_prop)):
-        bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(bpy.context.scene.tsv_emitter.tsv_group_index) + ',' + str(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index) + '_layer'].inputs[11].default_value = bpy.data.objects[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index].low_poly_objects]
+    
+    # Access key elements of the current context
+    scene = bpy.context.scene
+    tsv_emitter = scene.tsv_emitter
+    group_index = tsv_emitter.tsv_group_index
+    group = tsv_emitter.tsv_groups[group_index]
+    layer_index = group.layer_index
+    layer = group.layers[layer_index]
+    
+    # Construct the node identifier
+    node_identifier = f"{group_index},{layer_index}_layer"
+    node = tsv_emitter.modifiers['vegetation'].node_group.nodes[node_identifier]
+    
+    # Update the primary input value
+    node.inputs[10].default_value = sna_updated_prop
+    
+    # Check conditions for updating the low poly object input
+    if layer.low_poly_objects and sna_updated_prop == 'Low Poly':
+        low_poly_object = bpy.data.objects[layer.low_poly_objects]
+        node.inputs[11].default_value = low_poly_object
 
 def sna_update_low_poly_objects_4322F(self, context):
     sna_updated_prop = self.low_poly_objects

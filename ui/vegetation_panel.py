@@ -1,6 +1,6 @@
 import bpy
 
-from .. helper.get_prop import get_geo_node_prop
+from .. helper.get_prop_helper import get_geo_node_prop
 
 
 class TSV_PT_panel:

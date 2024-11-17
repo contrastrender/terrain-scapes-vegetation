@@ -1,23 +1,66 @@
 import bpy
 
 def sna_add_group_46FA8(label):
-    bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + '_biome'].name = str(int(len(bpy.context.scene.tsv_emitter.tsv_groups) + 1.0)) + '_biome'
-    node_F3D6B = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='GeometryNodeGroup', )
-    node_F3D6B.node_tree = bpy.data.node_groups['.TSV_biome']
-    node_F3D6B.name = str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + '_biome'
-    link_18D60 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + '_biome'].inputs[1], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes['system'].outputs[0], )
-    link_94E16 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(len(bpy.context.scene.tsv_emitter.tsv_groups) - 1.0)) + '_biome'].outputs[0], )
-    link_5498A = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(int(len(bpy.context.scene.tsv_emitter.tsv_groups) + 1.0)) + '_biome'].inputs[0], output=bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + '_biome'].outputs[0], )
-    node_7F85E = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='ShaderNodeValue', )
-    node_7F85E.outputs[0].default_value = 1.0
-    node_7F85E.name = str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + ',-1' + '_density'
-    node_C629E = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes.new(type='NodeReroute', )
-    node_C629E.name = str(len(bpy.context.scene.tsv_emitter.tsv_groups)) + ',0' + '_density'
-    link_79980 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=node_C629E.inputs[0], output=node_7F85E.outputs[0], )
-    link_9D209 = bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.links.new(input=node_F3D6B.inputs[5], output=node_C629E.outputs[0], )
-    item_6D1A0 = bpy.context.scene.tsv_emitter.tsv_groups.add()
-    item_6D1A0.label = label
-    bpy.context.scene.tsv_emitter.tsv_group_index = int(len(bpy.context.scene.tsv_emitter.tsv_groups) - 1.0)
+    """
+    Adds a new biome group to the TSV emitter system, updates node connections, 
+    and sets up the necessary structures for the new group.
+    """
+    # References to frequently used data
+    scene = bpy.context.scene
+    tsv_emitter = scene.tsv_emitter
+    modifiers = tsv_emitter.modifiers
+    vegetation_node_group = modifiers['vegetation'].node_group
+    num_groups = len(tsv_emitter.tsv_groups)
+
+    # Update the name of the current biome node
+    current_biome_node = vegetation_node_group.nodes[f"{num_groups}_biome"]
+    current_biome_node.name = f"{num_groups + 1}_biome"
+
+    # Add a new biome node
+    new_biome_node = vegetation_node_group.nodes.new(type='GeometryNodeGroup')
+    new_biome_node.node_tree = bpy.data.node_groups['.TSV_biome']
+    new_biome_node.name = f"{num_groups}_biome"
+
+    # Link the new biome node to the system and previous biome node
+    vegetation_node_group.links.new(
+        input=new_biome_node.inputs[1],
+        output=vegetation_node_group.nodes['system'].outputs[0]
+    )
+    if num_groups > 0:
+        previous_biome_node_name = f"{num_groups - 1}_biome"
+        vegetation_node_group.links.new(
+            input=new_biome_node.inputs[0],
+            output=vegetation_node_group.nodes[previous_biome_node_name].outputs[0]
+        )
+    vegetation_node_group.links.new(
+        input=vegetation_node_group.nodes[f"{num_groups + 1}_biome"].inputs[0],
+        output=new_biome_node.outputs[0]
+    )
+
+    # Add a new density-related nodes
+    value_node = vegetation_node_group.nodes.new(type='ShaderNodeValue')
+    value_node.outputs[0].default_value = 1.0
+    value_node.name = f"{num_groups},-1_density"
+
+    reroute_node = vegetation_node_group.nodes.new(type='NodeReroute')
+    reroute_node.name = f"{num_groups},0_density"
+
+    # Link density-related nodes
+    vegetation_node_group.links.new(
+        input=reroute_node.inputs[0],
+        output=value_node.outputs[0]
+    )
+    vegetation_node_group.links.new(
+        input=new_biome_node.inputs[5],
+        output=reroute_node.outputs[0]
+    )
+
+    # Add a new group to the TSV emitter
+    new_group = tsv_emitter.tsv_groups.add()
+    new_group.label = label
+
+    # Update the active group index
+    tsv_emitter.tsv_group_index = len(tsv_emitter.tsv_groups) - 1
 
 class TSV_OT_add_group(bpy.types.Operator):
     bl_idname = "tsv.add_group"
