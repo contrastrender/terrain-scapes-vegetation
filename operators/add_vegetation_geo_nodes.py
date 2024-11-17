@@ -28,7 +28,7 @@ class TSV_OT_add_vegetation_geo_nodes(bpy.types.Operator):
             appended_C10DA = None if not new_data else new_data[0]
             bpy.data.node_groups['.TSV_vegetation'].use_fake_user = True
         id_E5391 = bpy.data.node_groups['.TSV_vegetation'].copy()
-        modifier_6E969 = bpy.context.scene.sna_tsv_emitter.modifiers.new(name='vegetation', type='NODES', )
+        modifier_6E969 = bpy.context.scene.tsv_emitter.modifiers.new(name='vegetation', type='NODES', )
         modifier_6E969.node_group = id_E5391
         return {"FINISHED"}
 

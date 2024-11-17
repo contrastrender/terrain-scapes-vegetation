@@ -36,14 +36,14 @@ class TSV_GROUP_preset_group(bpy.types.PropertyGroup):
 class TSV_AddonPreferences(bpy.types.AddonPreferences):
 
     bl_idname = ROOT_PACKAGE_NAME #must match the root package name __package__
-    sna_tsv_preset_groups: bpy.props.CollectionProperty(
+    tsv_preset_groups: bpy.props.CollectionProperty(
         name='TSV_preset_groups',
         description='',
         type=TSV_GROUP_preset_group
         ) #type: ignore
     
-    sna_tsv_preset_groups_index: bpy.props.IntProperty(
-        name='TSV_preset_groups_index',
+    tsv_preset_group_index: bpy.props.IntProperty(
+        name='TSV_preset_group_index',
         description='',
         default=0,
         subtype='NONE'

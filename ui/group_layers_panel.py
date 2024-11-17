@@ -35,16 +35,16 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        emitter = bpy.context.scene.sna_tsv_emitter
-        if (index_in_col(emitter.sna_tsv_group_layers, emitter.sna_tsv_group_layer_index)):
+        emitter = bpy.context.scene.tsv_emitter
+        if (index_in_col(emitter.tsv_groups, emitter.tsv_group_index)):
             return True
         else:
             return None
 
     def draw(self, context):
 
-        group_index = bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index
-        group_layer = bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[group_index]
+        group_index = bpy.context.scene.tsv_emitter.tsv_group_index
+        group_layer = bpy.context.scene.tsv_emitter.tsv_groups[group_index]
 
         col_3D419 = self.layout.column(heading='', align=True)
         box_C1BA5 = col_3D419.box()
@@ -58,14 +58,14 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
         op = col_76FCC.operator('tsv.open_asset_browser', text='', icon_value=250, emboss=True, depress=False)
 
         cur_node = (bpy.context.scene
-                    .sna_tsv_emitter.modifiers['vegetation']
+                    .tsv_emitter.modifiers['vegetation']
                     .node_group.nodes[str(group_index) + ',' + str(group_layer.layer_index) + '_layer'])
 
         if (
             bpy.context.scene
-            .sna_tsv_emitter
-            .sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index]
-            .layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index]
+            .tsv_emitter
+            .tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index]
+            .layers[bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layer_index]
             ) != None:
 
             col_B146C = col_3D419.column(heading='', align=True)
@@ -77,7 +77,7 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
             col_9DC6A.label(text='Viewport Display', icon_value=0)
             col_9DC6A.prop(cur_node.inputs[12], 'default_value', text='Max Instances', icon_value=0, emboss=True, expand=True)
             row_A0D0F = col_9DC6A.row(heading='', align=False)
-            row_A0D0F.prop(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index], 'viewport_display', text=bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].viewport_display, icon_value=0, emboss=True, expand=True)
+            row_A0D0F.prop(bpy.context.scene.tsv_emitter.tsv_groups[bpy.context.scene.tsv_emitter.tsv_group_index].layers[bpy.context.scene.tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index], 'viewport_display', text=bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].viewport_display, icon_value=0, emboss=True, expand=True)
 
             if (bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index].viewport_display == 'Low Poly'):
                 col_9DC6A.template_icon_view(bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layers[bpy.context.scene.sna_tsv_emitter.sna_tsv_group_layer_index].layer_index], 'low_poly_objects', show_labels=False, scale=8.0, scale_popup=5.0)

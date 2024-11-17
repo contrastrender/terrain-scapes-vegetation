@@ -19,8 +19,8 @@ class TSV_PT_vegetation_panel(TSV_PT_panel, bpy.types.Panel):
 
         layout = self.layout
         col_CB6F2 = layout.column(heading='', align=False)
-        col_CB6F2.prop(bpy.context.scene, 'sna_tsv_emitter', text='Emitter', icon_value=0, emboss=True)
-        if (bpy.context.scene.sna_tsv_emitter != None):
+        col_CB6F2.prop(bpy.context.scene, 'tsv_emitter', text='Emitter', icon_value=0, emboss=True)
+        if (bpy.context.scene.tsv_emitter != None):
             if (veg_geo_nodes != None):
                 system_node = veg_geo_nodes.node_group.nodes.get("system")
                 col_B0A37 = col_CB6F2.column(heading='', align=False)
