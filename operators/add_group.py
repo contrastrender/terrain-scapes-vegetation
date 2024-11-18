@@ -1,6 +1,6 @@
 import bpy
 
-def sna_add_group_46FA8(label):
+def tsv_group_add(label):
     """
     Adds a new biome group to the TSV emitter system, updates node connections, 
     and sets up the necessary structures for the new group.
@@ -75,7 +75,12 @@ class TSV_OT_add_group(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        sna_add_group_46FA8('group')
+
+        #adds geo nodes modifier if missing
+        if bpy.context.scene.tsv_emitter.modifiers.get("vegetation") is None:
+            bpy.ops.tsv.add_vegetation_geo_nodes()
+
+        tsv_group_add('group')
         return {"FINISHED"}
 
     def invoke(self, context, event):

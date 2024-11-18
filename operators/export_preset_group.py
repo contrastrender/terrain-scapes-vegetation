@@ -9,8 +9,10 @@ class TSV_OT_export_preset_group(bpy.types.Operator):
     bl_label = "Export Preset Group"
     bl_description = ""
     bl_options = {"REGISTER", "UNDO"}
-    sna_directory: bpy.props.StringProperty(name='directory', description='', default='', subtype='DIR_PATH', maxlen=0)
-    sna_name: bpy.props.StringProperty(name='name', description='', default='', subtype='NONE', maxlen=0)
+
+    #op props
+    sna_directory: bpy.props.StringProperty(name='directory', description='', default='', subtype='DIR_PATH', maxlen=0) #type: ignore
+    sna_name: bpy.props.StringProperty(name='name', description='', default='', subtype='NONE', maxlen=0) #type: ignore
 
     @classmethod
     def poll(cls, context):
@@ -25,15 +27,6 @@ class TSV_OT_export_preset_group(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         col_35C43 = layout.column(heading='', align=False)
-        col_35C43.alert = False
-        col_35C43.enabled = True
-        col_35C43.active = True
-        col_35C43.use_property_split = True
-        col_35C43.use_property_decorate = False
-        col_35C43.scale_x = 1.0
-        col_35C43.scale_y = 1.0
-        col_35C43.alignment = 'Expand'.upper()
-        col_35C43.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
         col_35C43.prop(self, 'sna_directory', text='Directory', icon_value=0, emboss=True)
         col_35C43.prop(self, 'sna_name', text='Save As', icon_value=0, emboss=True)
 

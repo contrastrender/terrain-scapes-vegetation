@@ -2,7 +2,7 @@ import bpy
 
 from .. utils.property_utils import property_exists
 
-def sna_remove_layer_3CD98(Index):
+def sna_remove_group_layer(Index):
     """
     Removes a specific layer from the current TSV group and renames subsequent layers to maintain consistency.
     
@@ -48,7 +48,7 @@ def sna_remove_layer_3CD98(Index):
         if len(current_group.layers) == current_group.layer_index:
             current_group.layer_index = len(current_group.layers) - 1
 
-def sna_remove_biome_06ED5(Index):
+def tsv_remove_group(Index):
     """
     Removes a biome and its associated nodes, layers, and density masks from the TSV emitter system.
     
@@ -68,7 +68,7 @@ def sna_remove_biome_06ED5(Index):
 
         # Remove all layers associated with the biome
         for _ in range(len(tsv_emitter.tsv_groups[tsv_emitter.tsv_group_index].layers)):
-            sna_remove_layer_3CD98(0)
+            sna_remove_group_layer(0)
 
         # Remove all density mask nodes associated with the biome
         num_density_masks = len(tsv_emitter.tsv_groups[tsv_emitter.tsv_group_index].density_masks) + 2
@@ -132,7 +132,11 @@ class TSV_OT_remove_group(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        sna_remove_biome_06ED5(bpy.context.scene.tsv_emitter.tsv_group_index)
+        tsv_remove_group(bpy.context.scene.tsv_emitter.tsv_group_index)
+
+        #if no group exits, remove geo nodes modifier from emitter
+        if len(bpy.context.scene.tsv_emitter.tsv_groups) is 0:
+            bpy.ops.tsv.remove_vegetation_geo_nodes()
         return {"FINISHED"}
 
     def invoke(self, context, event):

@@ -7,7 +7,7 @@ from .. utils.color_utils import random_color
 from .. helper.group_layer_helper import sna_append_low_poly_objects_8DF63
 from .. utils.property_utils import property_exists
 
-def sna_add_layer_31A03(label):
+def add_group_layer(label):
     # Get references for better readability
     scene = bpy.context.scene
     tsv_emitter = scene.tsv_emitter
@@ -51,15 +51,25 @@ def sna_add_layer_31A03(label):
     new_layer.label = label
     group.layer_index = len(group.layers) - 1  # Set to the last layer index
     
-    return layer_name
+    return node_BFB5F
 
 
 
 class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
     bl_idname = "tsv.group_layer_add_from_selection"
-    bl_label = "Add From Selection"
-    bl_description = ""
-    bl_options = {"REGISTER", "UNDO"}
+    bl_label = "Add Layer"
+    bl_description = "Adds scattering layer using the active object"
+    bl_options = {"UNDO"}
+
+    density_items = [
+        ("","extremly low", "for large rock formations"),
+        ("","low", ""),
+        ("","mid", ""),
+        ("","high", ""),
+        ("","extremly high", ""),
+    ]
+
+    density_enum: bpy.props.EnumProperty(name='directory', description='', default='', items=density_items) #type: ignore
 
     @classmethod
     def poll(cls, context):
@@ -68,22 +78,28 @@ class TSV_OT_group_layer_add_from_selection(bpy.types.Operator):
         return not False
 
     def execute(self, context):
-        for i_C60DB in range(len(bpy.context.selected_objects)):
-            node_0_6aca5 = sna_add_layer_31A03(bpy.context.selected_objects[i_C60DB].name)
-            bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_6aca5].inputs[7].default_value = bpy.context.selected_objects[i_C60DB]
-        sna_append_low_poly_objects_8DF63()
+        ac_ob = bpy.context.active_object
+
+        if ac_ob is not None and ac_ob is not bpy.context.scene.tsv_emitter:
+            layer_node = add_group_layer(ac_ob.name)
+            layer_node.inputs[7].default_value = ac_ob
+            sna_append_low_poly_objects_8DF63()
+
         return {"FINISHED"}
 
     def draw(self, context):
-        layout = self.layout
-        col_0E2D5 = layout.column(heading='', align=True)
-        if (0 == len(bpy.context.selected_objects)):
-            box_EFDD4 = col_0E2D5.box()
-            box_EFDD4.label(text='No objects selected', icon_value=0)
+        col = self.layout.column()
+        box = col.box()
+
+        ac_ob = bpy.context.active_object
+        if ac_ob is None:
+            box.label(text = "No active object to scatter")
+        elif ac_ob is bpy.context.scene.tsv_emitter:
+            box.label(text = "Cant scatter emitter object")
         else:
-            for i_C55A4 in range(len(bpy.context.selected_objects)):
-                box_5BA78 = col_0E2D5.box()
-                box_5BA78.label(text=bpy.context.selected_objects[i_C55A4].name, icon_value=0)
+            box.label(text = ac_ob.name)
+            row = col.row()
+            row.prop(self, "density_enum", expand=True)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self, width=300)
@@ -169,33 +185,43 @@ class TSV_OT_group_layer_add_from_asset_browser(bpy.types.Operator):
             if ('OBJECT' != bpy.context.asset.id_type):
                 bpy.ops.sna.error_659d1('INVOKE_DEFAULT', sna_message='Active asset is not an object')
             else:
-                sna_append_objects_67667(bpy.context.asset.name, bpy.context.asset.full_library_path)
+                append_asset(bpy.context.asset.name, bpy.context.asset.full_library_path)
                 sna_append_low_poly_objects_8DF63()
-                node_0_d56bb = sna_add_layer_31A03(bpy.context.asset.name)
-                bpy.context.scene.tsv_emitter.modifiers['vegetation'].node_group.nodes[node_0_d56bb].inputs[7].default_value = bpy.data.objects[bpy.context.asset.name]
+                layer_node = add_group_layer(bpy.context.asset.name)
+                layer_node.inputs[7].default_value = bpy.data.objects[bpy.context.asset.name]
         return {"FINISHED"}
 
     def invoke(self, context, event):
         return self.execute(context)
     
-def sna_append_objects_67667(asset_name, asset_path):
-    if property_exists("bpy.data.collections['vegetation_assets']", globals(), locals()):
-        pass
-    else:
-        collection_FEE38 = bpy.data.collections.new(name='vegetation_assets', )
-        bpy.context.scene.collection.children.link(child=collection_FEE38, )
-        collection_FEE38.hide_render = True
-        collection_FEE38.hide_viewport = True
-    if property_exists("bpy.data.objects[asset_name]", globals(), locals()):
-        pass
-    else:
-        before_data = list(bpy.data.objects)
+def append_asset(asset_name, asset_path):
+    if bpy.data.collections.get("vegetation_assets") is None:
+        collection = bpy.data.collections.new(name='vegetation_assets', )
+        bpy.context.scene.collection.children.link(child=collection, )
+        collection.hide_render = True
+        collection.hide_viewport = True
+    
+    if bpy.data.objects.get(asset_name) is None:
+        existing_objects = list(bpy.data.objects)
+
+        # Append the new asset
         bpy.ops.wm.append(directory=asset_path + r'\Object', filename=asset_name, link=False)
-        new_data = list(filter(lambda d: not d in before_data, list(bpy.data.objects)))
-        appended_84AC8 = None if not new_data else new_data[0]
-        for i_B3C5D in range(len(appended_84AC8.users_collection)):
-            appended_84AC8.users_collection[i_B3C5D].objects.unlink(object=appended_84AC8, )
-        bpy.data.collections['vegetation_assets'].objects.link(object=appended_84AC8, )
+
+        # Determine which object was appended by filtering out the existing ones
+        new_objects = [obj for obj in bpy.data.objects if obj not in existing_objects]
+        appended_object = new_objects[0] if new_objects else None
+
+        if appended_object:
+            # Unlink the appended object from all its current collections
+            for collection in appended_object.users_collection:
+                collection.objects.unlink(appended_object)
+
+            # Link the appended object to the 'vegetation_assets' collection
+            vegetation_assets_collection = bpy.data.collections.get('vegetation_assets')
+            if vegetation_assets_collection:
+                vegetation_assets_collection.objects.link(appended_object)
+            else:
+                raise ValueError("Collection 'vegetation_assets' does not exist.")
 
 
 classes = [

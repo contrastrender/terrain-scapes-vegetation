@@ -24,7 +24,6 @@ class TSV_PT_vegetation_panel(TSV_PT_panel, bpy.types.Panel):
             if (veg_geo_nodes != None):
                 system_node = veg_geo_nodes.node_group.nodes.get("system")
                 col_B0A37 = col_CB6F2.column(heading='', align=False)
-                op = col_B0A37.operator('tsv.remove_vegetation_geo_nodes', text='Remove', icon_value=0, emboss=True, depress=False)
                 col_FC031 = col_B0A37.column(heading='', align=False)
                 col_94805 = col_FC031.column(heading='', align=True)
                 col_94805.prop(veg_geo_nodes, 'show_render', text='Show Render', icon_value=0, emboss=True)
@@ -40,11 +39,6 @@ class TSV_PT_vegetation_panel(TSV_PT_panel, bpy.types.Panel):
                     col_31EF0.prop(system_node.inputs[4], 'default_value', text='Focal Length', icon_value=0, emboss=True)
                     col_31EF0.prop(system_node.inputs[5], 'default_value', text='Width', icon_value=0, emboss=True)
                     col_31EF0.prop(system_node.inputs[6], 'default_value', text='Height', icon_value=0, emboss=True)
-                
-            else:
-                op = col_CB6F2.operator('tsv.add_vegetation_geo_nodes', text='Add', icon_value=0, emboss=True, depress=False)
-        else:
-            col_CB6F2.label(text='Select an emitter', icon_value=0)
  
 classes = [
     TSV_PT_vegetation_panel

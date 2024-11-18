@@ -23,7 +23,7 @@ class TSV_PT_groups(TSV_PT_panel, bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        return get_geo_node_prop()
+        return bpy.context.scene.tsv_emitter
 
     def draw(self, context):
 

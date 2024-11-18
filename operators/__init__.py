@@ -2,6 +2,7 @@ import bpy
 
 from . import export_preset_group
 from . import import_preset_group
+from . import expand_preset_group
 from . import open_preset_manager
 from . import remove_preset_group
 from . import save_preset_group
@@ -17,6 +18,7 @@ from . import group_mask
 classes  =  []
 classes += export_preset_group.classes
 classes += import_preset_group.classes
+classes += expand_preset_group.classes
 classes += open_preset_manager.classes
 classes += remove_preset_group.classes
 classes += save_preset_group.classes

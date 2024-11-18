@@ -1,9 +1,12 @@
 import bpy
 import os
 
+from .. utils.const_utils import ROOT_DIR
+
 from .. utils.property_utils import property_exists
 
 biome_density_mask__add = {'sna_masks': [], }
+_icons = None
 
 def load_preview_icon(path):
     global _icons
@@ -77,42 +80,9 @@ class TSV_OT_group_mask_add(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         col_FC1B4 = layout.column(heading='', align=False)
-        col_FC1B4.alert = False
-        col_FC1B4.enabled = True
-        col_FC1B4.active = True
-        col_FC1B4.use_property_split = True
-        col_FC1B4.use_property_decorate = False
-        col_FC1B4.scale_x = 1.0
-        col_FC1B4.scale_y = 1.0
-        col_FC1B4.alignment = 'Expand'.upper()
-        col_FC1B4.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
         col_FC1B4.template_icon_view(bpy.context.scene, 'tsv_masks', show_labels=True, scale=8.0, scale_popup=5.0)
 
     def invoke(self, context, event):
-        """
-        Populate biome density masks and display a dialog for user interaction.
-        """
-        # Initialize the masks list
-        biome_density_mask__add['sna_masks'] = []
-
-        # Define the directory for mask assets
-        base_dir = os.path.dirname(__file__)
-        masks_dir = os.path.join(base_dir, 'assets', 'terrain_scapes_vegetation', 'masks')
-
-        # Get a list of valid mask files
-        mask_files = [
-            os.path.join(masks_dir, f)
-            for f in os.listdir(masks_dir)
-            if os.path.isfile(os.path.join(masks_dir, f))
-        ]
-
-        # Populate sna_masks with relevant data
-        for mask_file in mask_files:
-            mask_name = os.path.basename(mask_file).replace('.png', '')
-            preview_icon = load_preview_icon(mask_file)
-            biome_density_mask__add['sna_masks'].append([mask_name, mask_name, '', preview_icon])
-
-        # Invoke the properties dialog
         return context.window_manager.invoke_props_dialog(self, width=300)
 
     

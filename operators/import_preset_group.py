@@ -21,15 +21,6 @@ class TSV_OT_import_preset_group(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         col_87E33 = layout.column(heading='', align=False)
-        col_87E33.alert = False
-        col_87E33.enabled = True
-        col_87E33.active = True
-        col_87E33.use_property_split = False
-        col_87E33.use_property_decorate = False
-        col_87E33.scale_x = 1.0
-        col_87E33.scale_y = 1.0
-        col_87E33.alignment = 'Expand'.upper()
-        col_87E33.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
         col_87E33.prop(self, 'sna_preset_group', text='Preset Group', icon_value=0, emboss=True)
 
     def invoke(self, context, event):

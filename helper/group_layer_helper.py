@@ -1,26 +1,49 @@
 import bpy
 import os
 
+from .. utils.const_utils import ROOT_DIR
 from .. utils.blend_utils import get_blend_contents
-from .. utils.property_utils import property_exists
 
 
 def sna_append_low_poly_objects_8DF63():
-    if property_exists("bpy.data.collections['low_poly_objects']", globals(), locals()):
-        pass
-    else:
-        collection_85E6C = bpy.data.collections.new(name='low_poly_objects', )
-        collection_85E6C.hide_viewport = True
-        collection_85E6C.hide_render = True
-        bpy.context.collection.children.link(child=collection_85E6C, )
-        for i_EEF75 in range(len(get_blend_contents(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'blends','low_poly_objects.blend'), 'objects'))):
-            before_data = list(bpy.data.objects)
-            bpy.ops.wm.append(directory=os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'blends','low_poly_objects.blend') + r'\Object', filename=get_blend_contents(os.path.join(os.path.join(os.path.dirname(__file__), 'assets', 'terrain_scapes_vegetation'),'blends','low_poly_objects.blend'), 'objects')[i_EEF75], link=False)
-            new_data = list(filter(lambda d: not d in before_data, list(bpy.data.objects)))
-            appended_A634A = None if not new_data else new_data[0]
-            for i_5BF01 in range(len(appended_A634A.users_collection)):
-                appended_A634A.users_collection[i_5BF01].objects.unlink(object=appended_A634A, )
-            bpy.data.collections['low_poly_objects'].objects.link(object=appended_A634A, )
+    # Check if the collection already exists
+    if bpy.data.collections.get('low_poly_objects') is None:
+        # Create a new collection if it doesn't exist
+        collection = bpy.data.collections.new(name='low_poly_objects')
+        bpy.context.scene.collection.children.link(child=collection, )
+        collection.hide_viewport = True
+        collection.hide_render = True
+
+        # Get the file path of the blend file
+        blend_file_path = os.path.join(ROOT_DIR, 'assets', 'blends', 'low_poly_objects.blend')
+        
+        # Get object names from the blend file
+        objects_to_append = get_blend_contents(blend_file_path, 'objects')
+        blend_object_dir = os.path.join(blend_file_path, r'Object')
+
+        # Append each object
+        for object_name in objects_to_append:
+            before_objects = set(bpy.data.objects)
+            
+            # Append the object
+            bpy.ops.wm.append(
+                directory=blend_object_dir, 
+                filename=object_name, 
+                link=False
+            )
+            
+            # Identify the newly appended object
+            new_objects = set(bpy.data.objects) - before_objects
+            appended_object = next(iter(new_objects), None)
+
+            if appended_object:
+                # Unlink the object from all current collections
+                for collection in list(appended_object.users_collection):
+                    collection.objects.unlink(appended_object)
+                
+                # Link the object to the low_poly_objects collection
+                bpy.data.collections['low_poly_objects'].objects.link(appended_object)
+
 
 class TSV_OT_open_asset_browser(bpy.types.Operator):
     bl_idname = "tsv.open_asset_browser"

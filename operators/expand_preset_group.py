@@ -18,3 +18,7 @@ class TSV_OT_expand_preset_group(bpy.types.Operator):
 
     def invoke(self, context, event):
         return self.execute(context)
+    
+classes = [
+    TSV_OT_expand_preset_group
+]
