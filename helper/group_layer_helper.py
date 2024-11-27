@@ -2,10 +2,8 @@ import bpy
 import os
 
 from .. helper.get_prop_helper import tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_group_layer, tsv_get_group_layer_index, tsv_get_group_layers
-
 from .. utils.color_utils import random_color
 from .. utils.integer_utils import random_integer
-
 from .. const import __FILE__
 
 def tsv_group_layer_add():
@@ -117,7 +115,13 @@ def tsv_append_scattering_object(asset_name, asset_path):
         vegetation_assets_collection.objects.link(appended_object)
         return appended_object
 
-def tsv_search_object_in_asset_libraries(object_name) -> str:
+def tsv_search_object_in_asset_libraries(object_name) -> bpy.types.PointerProperty:
+
+    # Check if object already exists in the scene
+    if bpy.data.objects.get(object_name) is not None:
+        return bpy.data.objects.get(object_name)
+
+
     asset_libraries = bpy.context.preferences.filepaths.asset_libraries
     for asset_library in asset_libraries:
         path = asset_library.path

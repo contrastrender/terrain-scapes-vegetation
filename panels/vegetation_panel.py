@@ -20,8 +20,6 @@ class TSV_PT_vegetation_panel(TSV_PT_panel, bpy.types.Panel):
         col = self.layout.column()
         col.use_property_split = True
         col.use_property_decorate = False
-        
-        return
 
         col.prop(bpy.context.scene, 'tsv_emitter', text='Emitter', icon_value=0, emboss=True)
         if (bpy.context.scene.tsv_emitter is not None):

@@ -2,7 +2,10 @@ import json
 import bpy
 import os
 
-from .. helper.get_prop_helper import tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_preset_group, tsv_get_preset_group_index, tsv_get_preset_groups
+from .. helper.group_layer_helper import tsv_group_layer_add, tsv_search_object_in_asset_libraries
+from .. helper.group_helper import tsv_group_add
+from .. utils.collection_utils import tsv_collection_move_down, tsv_collection_move_up
+from .. helper.get_prop_helper import tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_group_layer_index, tsv_get_preset_group, tsv_get_preset_group_index, tsv_get_preset_groups
 from .. const import __PACKAGE__
 
 def tsv_preset_group_add():
@@ -22,7 +25,7 @@ def tsv_preset_group_add():
 
     # Add Layers
     for i, layer in enumerate(group.layers):
-        preset_layer_item = preset_group_item.preset_layers.add()
+        preset_layer_item = preset_group_item.layers.add()
 
         # Set layer label
         preset_layer_item.label = layer.label
@@ -38,23 +41,29 @@ def tsv_preset_group_add():
 
             # Set inputs depending on their type
             if input.type == "VALUE":
-                preset_layer_input_item.type = "VALUE" #define type
-                preset_layer_input_item.value = f"{input.default_value}" #define value
+                preset_layer_input_item.type = "VALUE"
+                preset_layer_input_item.value = f"{input.default_value}"
             elif input.type == "INT":
-                preset_layer_input_item.type = "INT" #define type
-                preset_layer_input_item.value = f"{input.default_value}" #define value
+                preset_layer_input_item.type = "INT"
+                preset_layer_input_item.value = f"{input.default_value}"
             elif input.type == "BOOLEAN":
-                preset_layer_input_item.type = "BOOLEAN" #define type
-                preset_layer_input_item.value = f"{input.default_value}" #define value
+                preset_layer_input_item.type = "BOOLEAN"
+                preset_layer_input_item.value = f"{input.default_value}"
             elif input.type == "MENU":
-                preset_layer_input_item.type = "STRING" #define type
-                preset_layer_input_item.value = f"{input.default_value}" #define value
+                preset_layer_input_item.type = "MENU"
+                preset_layer_input_item.value = f"{input.default_value}"
             elif input.type == "OBJECT":
-                preset_layer_input_item.type = "OBJECT" #define type
-                preset_layer_input_item.value = f"{input.default_value.name}" #define value
+                preset_layer_input_item.type = "OBJECT"
+
+                # Check if object even exists
+                if input.default_value is not None:
+                    preset_layer_input_item.value = f"{input.default_value.name}"
+                else:
+                    preset_layer_input_item.value = f""
+
             else:
-                preset_layer_input_item.type = "" #define type
-                preset_layer_input_item.value = "" #define value
+                preset_layer_input_item.type = ""
+                preset_layer_input_item.value = ""
 
 def tsv_preset_group_remove():
     preset_group = tsv_get_preset_group()
@@ -66,16 +75,19 @@ def tsv_preset_group_remove():
 
 def tsv_preset_group_export_to_json(directory: str, json_file_name: str):
 
-
-    file_path = os.path.join(directory, json_file_name)
-
-    # Get the current preset group
-    preset_group = tsv_get_preset_group()
-    
     # Check if the group exists
     if preset_group is None:
         print("No preset group available to export.")
-        return
+        return None
+    
+    if not os.path.exists(directory):
+        print("Directory not found")
+        return None
+
+    file_path = os.path.join(directory, f"{json_file_name}.json")
+
+    # Get the current preset group
+    preset_group = tsv_get_preset_group()
 
     # Serialize the preset group
     preset_group_json = {
@@ -104,7 +116,6 @@ def tsv_preset_group_export_to_json(directory: str, json_file_name: str):
         print(f"Preset group successfully exported to {file_path}")
     except Exception as e:
         print(f"Failed to export preset group: {e}")
-    None
 
 def tsv_preset_group_import_from_json(json_preset_group_file_path: str):
     try:
@@ -142,26 +153,45 @@ def tsv_preset_group_import_from_json(json_preset_group_file_path: str):
     None
 
 def tsv_preset_group_move_up():
-    None
+    preset_groups = tsv_get_preset_groups()
+    preset_group_index = tsv_get_preset_group_index()
+    tsv_collection_move_up(preset_groups, preset_group_index)
 
 def tsv_preset_group_move_down():
-    None
+    preset_groups = tsv_get_preset_groups()
+    preset_group_index = tsv_get_preset_group_index()
+    tsv_collection_move_down(preset_groups, preset_group_index)
 
 def tsv_preset_group_load():
-    None
 
-    if property_exists("preset_group", globals(), locals()):
-        if os.path.isdir(directory):
-            if (name != ''):
-                if property_exists("preset_group", globals(), locals()):
-                    export_preset_group['sna_layers'] = ''
-                    for i_AC223 in range(len(preset_group.tsv_preset_layers)):
-                        export_preset_group['sna_layers'] = export_preset_group['sna_layers'] + preset_group.tsv_preset_layers[i_AC223].label + '|||' + preset_group.tsv_preset_layers[i_AC223].inputs + ('' if (int(len(preset_group.tsv_preset_layers) - 1.0) == i_AC223) else '||||')
-                    if os.path.exists(os.path.join(directory,name) + '.txt'):
-                        with open(os.path.join(directory,name) + '.txt', mode='w') as file_D3175:
-                            file_D3175.seek(0)
-                            file_D3175.write(preset_group.label + '|||||' + export_preset_group['sna_layers'])
-                            file_D3175.truncate()
-                    else:
-                        with open(os.path.join(directory,name) + '.txt', mode='a') as file_7C20D:
-                            file_7C20D.write(preset_group.label + '|||||' + export_preset_group['sna_layers'])
+    geo_nodes = tsv_get_geo_nodes()
+    preset_group = tsv_get_preset_group()
+    
+    tsv_group_add()
+    group_node = geo_nodes.nodes.get(f"{tsv_get_group_index()}_group")
+
+    for preset_group_layer in preset_group.layers:
+
+        tsv_group_layer_add()
+        layer_node = group_node.node_tree.nodes.get(f"{tsv_get_group_layer_index()}_layer")
+
+        for i, preset_group_layer_input in enumerate(preset_group_layer.inputs):
+
+            if preset_group_layer_input.type == "INT":
+                layer_node.inputs[i].default_value = int(preset_group_layer_input.value)
+            elif preset_group_layer_input.type == "VALUE":
+                layer_node.inputs[i].default_value = float(preset_group_layer_input.value)
+            elif preset_group_layer_input.type == "BOOLEAN":
+                layer_node.inputs[i].default_value = bool(preset_group_layer_input.value)
+            elif preset_group_layer_input.type == "MENU":
+                layer_node.inputs[i].default_value = str(preset_group_layer_input.value)
+            elif preset_group_layer_input.type == "OBJECT":
+
+                object_name = preset_group_layer_input.value
+                # Check if object name was saved
+                if object_name != "":
+                    object = tsv_search_object_in_asset_libraries(object_name)
+                    layer_node.inputs[i].default_value = object
+
+            elif preset_group_layer_input.type == "":
+                None

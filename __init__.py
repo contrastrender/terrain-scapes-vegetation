@@ -1,10 +1,10 @@
 MODULE_NAMES = [
     "operators",
     "preferences",
-    "ui",
+    "panels",
     "properties",
     "helper"
-    ]
+]
 
 # Import the modules dynamically
 import importlib

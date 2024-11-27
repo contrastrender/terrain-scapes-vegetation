@@ -2,8 +2,7 @@ import bpy
 
 from .. utils.ui_utils import tsv_display_input
 from .. helper.get_prop_helper import tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_group_layer, tsv_get_group_layer_index
-from .. utils.collection_utils import index_in_col
-from .. ui.vegetation_panel import TSV_PT_panel
+from .. panels.vegetation_panel import TSV_PT_panel
 
 class TSV_UL_group_layers(bpy.types.UIList):
 
@@ -30,11 +29,7 @@ class TSV_PT_group_layers(TSV_PT_panel, bpy.types.Panel):
 
     @classmethod
     def poll(self, context):
-        emitter = bpy.context.scene.tsv_emitter
-        if (index_in_col(emitter.tsv_groups, emitter.tsv_group_index)):
-            return True
-        else:
-            return None
+        return tsv_get_group()
 
     def draw(self, context):
 

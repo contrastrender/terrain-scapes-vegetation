@@ -1,7 +1,7 @@
 import bpy
 
-from .. helper.get_prop_helper import tsv_get_emitter, tsv_get_preferences, tsv_get_preset_group
-from .. const import __PACKAGE__
+from ..helper.get_prop_helper import tsv_get_emitter, tsv_get_preferences, tsv_get_preset_group
+from ..const import __PACKAGE__
 
 class TSV_UL_preset_groups(bpy.types.UIList):
 

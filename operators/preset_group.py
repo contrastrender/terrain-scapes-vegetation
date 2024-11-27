@@ -54,8 +54,6 @@ class TSV_OT_preset_group_add(bpy.types.Operator):
     bl_description = ""
     bl_options = {"UNDO"}
 
-    sna_index: bpy.props.IntProperty(name='index', description='', default=0, subtype='NONE') #type: ignore
-
     def execute(self, context):
         tsv_preset_group_add()
         return {"FINISHED"}
@@ -93,9 +91,6 @@ class TSV_OT_preset_group_move_up(bpy.types.Operator):
         tsv_preset_group_move_up()
         return {"FINISHED"}
 
-    def invoke(self, context, event):
-        None
-
 class TSV_OT_preset_group_move_down(bpy.types.Operator):
     bl_idname = "tsv.preset_group_move_down"
     bl_label = "Move Down"
@@ -106,9 +101,6 @@ class TSV_OT_preset_group_move_down(bpy.types.Operator):
         tsv_preset_group_move_down()
         return {"FINISHED"}
 
-    def invoke(self, context, event):
-        None
-
 class TSV_OT_preset_group_load(bpy.types.Operator):
     bl_idname = "tsv.preset_group_load"
     bl_label = "Load"
@@ -118,9 +110,6 @@ class TSV_OT_preset_group_load(bpy.types.Operator):
     def execute(self, context):
         tsv_preset_group_load()
         return {"FINISHED"}
-    
-    def invoke(self, context, event):
-        None
 
 classes = [
     TSV_OT_preset_group_export,

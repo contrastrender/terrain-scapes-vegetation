@@ -3,24 +3,24 @@ import os
 
 from .. helper.get_prop_helper import tsv_get_emitter, tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_groups
 from .. const import __FILE__
-from .. utils.property_utils import property_exists
 
 def tsv_add_geo_nodes_modifier():
-    if property_exists("bpy.data.node_groups['.TSV_vegetation']", globals(), locals()):
-        pass
-    else:
+    if bpy.data.node_groups.get(".TSV_vegetation") is None:
         before_data = list(bpy.data.node_groups)
         bpy.ops.wm.append(directory=os.path.join(os.path.dirname(__FILE__) ,"assets",'blends','vegetation.blend') + r'\NodeTree', filename='.TSV_vegetation', link=False)
         new_data = list(filter(lambda d: not d in before_data, list(bpy.data.node_groups)))
         appended_C10DA = None if not new_data else new_data[0]
         bpy.data.node_groups['.TSV_vegetation'].use_fake_user = True
+
     id_E5391 = bpy.data.node_groups['.TSV_vegetation'].copy()
     modifier_6E969 = bpy.context.scene.tsv_emitter.modifiers.new(name='vegetation', type='NODES', )
     modifier_6E969.node_group = id_E5391
 
 def tsv_remove_geo_nodes_modifier():
-    bpy.context.scene.tsv_emitter.tsv_groups.clear()
-    bpy.context.scene.tsv_emitter.modifiers.remove(modifier=bpy.context.scene.tsv_emitter.modifiers['vegetation'], )
+    groups = tsv_get_groups()
+    groups.clear()
+    emitter = tsv_get_emitter()
+    emitter.modifiers.remove(modifier=emitter.modifiers['vegetation'], )
 
 def tsv_group_move_up():
     None

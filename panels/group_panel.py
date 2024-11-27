@@ -2,7 +2,7 @@ import bpy
 
 from .. helper.get_prop_helper import tsv_get_emitter, tsv_get_geo_nodes
 
-from .. ui.vegetation_panel import TSV_PT_panel
+from .. panels.vegetation_panel import TSV_PT_panel
 
 class TSV_UL_groups(bpy.types.UIList):
 

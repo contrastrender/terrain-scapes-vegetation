@@ -2,7 +2,7 @@ import bpy
 
 from .. helper.get_prop_helper import tsv_get_geo_nodes, tsv_get_group, tsv_get_group_index, tsv_get_group_mask, tsv_get_group_mask_index
 from .. utils.ui_utils import tsv_display_inputs
-from .. ui.vegetation_panel import TSV_PT_panel
+from .. panels.vegetation_panel import TSV_PT_panel
 
 class TSV_UL_group_masks(bpy.types.UIList):
 

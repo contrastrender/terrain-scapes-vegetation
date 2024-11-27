@@ -4,7 +4,7 @@ from . import vegetation_panel
 from . import group_panel
 from . import group_masks_panel
 from . import group_layers_panel
-from . import preset_manager
+from ..ui import preset_manager
 from . import layer_add_asset_panel
 
 classes  =  []
