@@ -1,105 +1,96 @@
 import bpy
 
-from .. utils.const_utils import ROOT_PACKAGE_NAME
+from .. const import __PACKAGE__
+
+# preferences
+
+def tsv_get_preferences():
+    return bpy.context.preferences.addons[__PACKAGE__].preferences
 
 #preset groups
 
-def get_preset_groups():
-    return bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups
+def tsv_get_preset_groups():
+    preferences = tsv_get_preferences()
+    return preferences.preset_groups
 
-def get_preset_group_index():
-    return bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_group_index
+def tsv_get_preset_group_index():
+    preferences = tsv_get_preferences()
+    return preferences.preset_group_index
 
-def get_preset_group(index: int):
+def tsv_get_preset_group():
+    preset_groups = tsv_get_preset_groups()
+    preset_group_index = tsv_get_preset_group_index()
     try:
-        return bpy.context.preferences.addons[ROOT_PACKAGE_NAME].preferences.tsv_preset_groups[index]
+        return preset_groups[preset_group_index]
     except:
         return None
-
-def get_ac_preset_group():
-    preset_group_index = get_preset_group_index()
-    return get_preset_group(preset_group_index)
 
 #emitter
 
-def get_emitter():
+def tsv_get_emitter():
     return bpy.context.scene.tsv_emitter
 
-def get_geo_node_prop():
-    emitter = get_emitter()
-    if emitter != None:
-        return emitter.modifiers.get("vegetation")
+def tsv_get_geo_nodes():
+    emitter = tsv_get_emitter()
+    if emitter is not None:
+        return emitter.modifiers.get("vegetation").node_group
 
 #groups
 
-def get_ac_group_index():
-    emitter = get_emitter()
-    if emitter != None:
-        return emitter.tsv_group_index
+def tsv_get_groups():
+    emitter = tsv_get_emitter()
+    if emitter is not None:
+        return emitter.tsv_groups
 
-def get_ac_group_node():
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        group_index = get_ac_group_index()
-        return geo_nodes.node_group.nodes.get(str(group_index) + '_biome')
+def tsv_get_group_index():
+    emitter = tsv_get_emitter()
+    if emitter is not None:
+        return emitter.tsv_group_index
     
-def get_group_node(index: int):
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        return geo_nodes.node_group.nodes.get(str(index) + '_biome')
+def tsv_get_group():
+    groups = tsv_get_groups()
+    group_index = tsv_get_group_index()
+    try:
+        return groups[group_index]
+    except:
+        return None
     
 #group_mask
 
-def get_ac_group_ac_density_index():
-    emitter = get_emitter()
-    group_index = get_ac_group_index()
+def tsv_get_group_mask_index():
+    group = tsv_get_group()
+    if group is not None:
+        return group.mask_index
+
+def tsv_get_group_masks():
+    group = tsv_get_group()
+    if group is not None:
+        return group.masks
+    
+def tsv_get_group_mask():
+    group_masks = tsv_get_group_masks()
+    group_mask_index = tsv_get_group_mask_index()
     try:
-        return emitter.tsv_groups[group_index].density_index
+        return group_masks[group_mask_index]
     except:
         return None
-
-def get_ac_group_ac_density_node():
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        group_index = get_ac_group_index()
-        group_density_index = get_ac_group_ac_density_index()
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(group_density_index) + "_density")
-
-def get_ac_group_density_node(density_index: int):
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        group_index = get_ac_group_index()
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(density_index) + "_density")
-
-def get_group_density_node(group_index: int, density_index: int):
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(density_index) + "_density")
 
 #group_layer
 
-def get_ac_group_ac_layer_index():
-    emitter = get_emitter()
-    group_index = get_ac_group_index()
+def tsv_get_group_layer_index():
+    group = tsv_get_group()
+    if group is not None:
+        return group.layer_index
+
+def tsv_get_group_layers():
+    group = tsv_get_group()
+    if group is not None:
+        return group.layers
+    
+def tsv_get_group_layer():
+    group_layers = tsv_get_group_layers()
+    group_layer_index = tsv_get_group_layer_index()
     try:
-        return emitter.tsv_groups[group_index].layer_index
+        return group_layers[group_layer_index]
     except:
         return None
-
-def get_ac_group_ac_layer_node():
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        group_index = get_ac_group_index()
-        group_layer_index = get_ac_group_ac_layer_index()
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(group_layer_index) + "_layer")
-
-def get_ac_group_layer_node(layer_index: int):
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        group_index = get_ac_group_index()
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(layer_index) + "_layer")
-
-def get_group_layer_node(group_index: int, layer_index: int):
-    geo_nodes = get_geo_node_prop()
-    if geo_nodes != None:
-        return geo_nodes.node_group.nodes.get(str(group_index) + "," + str(layer_index) + "_layer")

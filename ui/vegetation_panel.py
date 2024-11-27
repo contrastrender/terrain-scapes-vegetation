@@ -1,6 +1,6 @@
 import bpy
 
-from .. helper.get_prop_helper import get_geo_node_prop
+from .. helper.get_prop_helper import tsv_get_geo_nodes
 
 
 class TSV_PT_panel:
@@ -15,19 +15,23 @@ class TSV_PT_vegetation_panel(TSV_PT_panel, bpy.types.Panel):
  
     def draw(self, context):
 
-        veg_geo_nodes = get_geo_node_prop()
+        geo_nodes = tsv_get_geo_nodes()
 
-        layout = self.layout
-        col_CB6F2 = layout.column(heading='', align=False)
-        col_CB6F2.prop(bpy.context.scene, 'tsv_emitter', text='Emitter', icon_value=0, emboss=True)
-        if (bpy.context.scene.tsv_emitter != None):
-            if (veg_geo_nodes != None):
-                system_node = veg_geo_nodes.node_group.nodes.get("system")
-                col_B0A37 = col_CB6F2.column(heading='', align=False)
+        col = self.layout.column()
+        col.use_property_split = True
+        col.use_property_decorate = False
+        
+        return
+
+        col.prop(bpy.context.scene, 'tsv_emitter', text='Emitter', icon_value=0, emboss=True)
+        if (bpy.context.scene.tsv_emitter is not None):
+            if (geo_nodes is not None):
+                system_node = geo_nodes.nodes.get("settings")
+                col_B0A37 = col.column(heading='', align=False)
                 col_FC031 = col_B0A37.column(heading='', align=False)
                 col_94805 = col_FC031.column(heading='', align=True)
-                col_94805.prop(veg_geo_nodes, 'show_render', text='Show Render', icon_value=0, emboss=True)
-                col_94805.prop(veg_geo_nodes, 'show_viewport', text='Show Viewport', icon_value=253, emboss=True)
+                col_94805.prop(geo_nodes, 'show_render', text='Show Render', icon_value=0, emboss=True)
+                col_94805.prop(geo_nodes, 'show_viewport', text='Show Viewport', icon_value=253, emboss=True)
                 col_3A18C = col_FC031.column(heading='', align=True)
                 col_3A18C.prop(system_node.inputs[0], 'default_value', text='Render Scale', icon_value=0, emboss=True)
                 col_3A18C.prop(system_node.inputs[1], 'default_value', text='Viewport Scale', icon_value=0, emboss=True)

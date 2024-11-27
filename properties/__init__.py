@@ -1,8 +1,8 @@
-from typing import Iterable
 import bpy
 import os
 
-from .. utils.const_utils import ROOT_DIR
+from .. const import __FILE__
+
 
 _item_map = dict()
 
@@ -27,7 +27,7 @@ def load_preview_icon(path):
 icons = bpy.utils.previews.new()
 
 def load_tsv_mask_items():
-    path = os.path.join(ROOT_DIR, "assets", "images", "masks")
+    path = os.path.join(os.path.dirname(__FILE__), "assets", "images", "masks")
     
     # Get icon names dynamically from the directory
     icon_names = [
@@ -56,7 +56,7 @@ def tsv_searchable_asset_libraries_enum_items(self, context):
     return [make_enum_item(item[0], item[1], item[2], item[3], 2**i) for i, item in enumerate(enum_items)]
 
 def load_tsv_low_poly_objects_items():
-    path = os.path.join(ROOT_DIR, "assets", "images", "low_poly_objects")
+    path = os.path.join(os.path.dirname(__FILE__), "assets", "images", "low_poly_objects")
     
     # Get icon names dynamically from the directory
     icon_names = [
@@ -131,36 +131,19 @@ class TSV_GROUP_mask(bpy.types.PropertyGroup):
 
 class TSV_GROUP_layer(bpy.types.PropertyGroup):
     label: bpy.props.StringProperty(
-        name='Label', 
+        name='label', 
         description='', 
         default='', 
         subtype='NONE', 
         maxlen=0
-        ) #type: ignore
-    
-    viewport_display: bpy.props.EnumProperty(
-        name='Viewport Display', 
-        description='', 
-        items=[
-            ('Bounding Box', 'Bounding Box', '', 0, 0), 
-            ('Object', 'Object', '', 0, 1), 
-            ('Low Poly', 'Low Poly', '', 0, 2)
-        ], 
-        update=update_viewport_display
-        ) #type: ignore
-    
-    low_poly_objects: bpy.props.EnumProperty(
-        name = 'Low Poly Objects', description='',
-        items = load_tsv_low_poly_objects_items(), 
-        update = update_low_poly_objects
         ) #type: ignore
 
 class TSV_GROUP_group(bpy.types.PropertyGroup):
     label: bpy.props.StringProperty(name='Label', description='', default='', subtype='NONE', maxlen=0) #type: ignore
     layers: bpy.props.CollectionProperty(name='Layers', description='', type=TSV_GROUP_layer) #type: ignore
     layer_index: bpy.props.IntProperty(name='Layer Index', description='', default=0, subtype='NONE') #type: ignore
-    density_masks: bpy.props.CollectionProperty(name='Density Masks', description='', type=TSV_GROUP_mask) #type: ignore
-    density_mask_index: bpy.props.IntProperty(name='Density Mask Index', description='', default=0, subtype='NONE') #type: ignore
+    masks: bpy.props.CollectionProperty(name='Masks', description='', type=TSV_GROUP_mask) #type: ignore
+    mask_index: bpy.props.IntProperty(name='Mask Index', description='', default=0, subtype='NONE') #type: ignore
 
 #from . import module
 

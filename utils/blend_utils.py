@@ -7,8 +7,5 @@ def get_blend_contents(path, data_type):
             return getattr(data_from, data_type)
     return []
 
-
-
-classes = [
-
-]
+def append_object(object_name: str, blend_file_path: str):
+    bpy.ops.wm.append()

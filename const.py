@@ -1,2 +1,2 @@
-FILE_NAME = __file__
-PACKAGE = __package__
+__FILE__ = __file__
+__PACKAGE__ = __package__

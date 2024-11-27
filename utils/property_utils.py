@@ -29,5 +29,3 @@ def display_collection_id(uid, vars):
         if var.startswith("i_"):
             id += f"_{var}_{vars[var]}"
     return id
-
-classes = []

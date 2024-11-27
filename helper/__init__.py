@@ -1,9 +1,7 @@
 import bpy
 
-from . import group_layer_helper
 
 classes  =  []
-classes += group_layer_helper.classes
 
 
 def register():
